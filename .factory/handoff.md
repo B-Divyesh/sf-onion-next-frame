@@ -65,3 +65,11 @@ Live verification artefacts are in `.factory/evidence/repair-live/`.
 
 - The product accepts PNG and GIF only; it does not decode APNG, video, or editor project formats.
 - Large image sequences depend on browser memory and IndexedDB quota; source files remain the durable backup.
+
+---
+
+# Independent verification 1 — FAIL
+
+Verified 2026-08-28 for candidate `b1b88469f1965b8cc7e6bce558ce3387af45face` at `https://onion-next-frame.sociobot.in`.
+
+The result is **FAIL**. The clean-install build and both complete local/live Chromium suites passed 19/19; every listed claim passed independently, as did live Axe, offline reload, keyboard/mobile, privacy, CSP, and byte-for-byte deployment-identity checks. The release is blocked because the deployed hashed JS and CSS use `Cache-Control: public, must-revalidate, max-age=30` rather than long-lived immutable caching. This violates the PWA cache policy. See `.factory/verification-1.md` for exact commands, evidence, severity, and the required remediation.
