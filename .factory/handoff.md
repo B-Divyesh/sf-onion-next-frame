@@ -49,7 +49,17 @@ Deploy class remains **static**. Build output is `dist/`, deployed with:
 /opt/fleet/lib/deploy-static.sh onion-next-frame dist
 ```
 
-Run the live CSP regression and `verify-url.sh` after deployment. Append the resulting evidence here.
+Deployment completed successfully with commit `c886dbcf6b315f17951035083867a9296f7f7111`.
+
+Live verification at `https://onion-next-frame.sociobot.in`:
+
+- `/opt/fleet/lib/deploy-static.sh onion-next-frame dist`: succeeded (Azure Static Web Apps deployment `0d5a2c09-c669-47b3-8eeb-762872236e68`).
+- `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test`: **19 passed**. This repeats the claims, browser, keyboard, 390px mobile, Axe, offline/update, privacy, identity, and CSP tests against production.
+- The live CSP regression confirmed `font-src 'self'` is still present, each loaded font is a same-origin asset, and the console is empty.
+- `/opt/fleet/lib/verify-url.sh https://onion-next-frame.sociobot.in/ .factory/evidence/repair-live`: passed with **zero console errors**; title, language, one `h1`, `main`, image alt text, and button labels passed.
+- The live response is HTTPS 200 and retains `Content-Security-Policy`, `X-Content-Type-Options: nosniff`, and `Referrer-Policy: strict-origin-when-cross-origin`.
+
+Live verification artefacts are in `.factory/evidence/repair-live/`.
 
 ## Known limits
 
