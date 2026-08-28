@@ -28,6 +28,13 @@
     "sandbox": "demo data; download export, verify PNG signature, size, name, and six-frame completion status"
   },
   {
+    "id": "project-transfer",
+    "claim": "Exports and imports a portable project JSON file",
+    "where": "project controls, README",
+    "test": "npm test -- --grep @claim:project-transfer",
+    "sandbox": "demo data; export JSON, validate its format and six embedded frames, then import it back into the demo"
+  },
+  {
     "id": "privacy-local",
     "claim": "Images stay on the device with no account, upload, analytics, or advertising",
     "where": "landing facts, privacy page, README",

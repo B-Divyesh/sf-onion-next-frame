@@ -136,6 +136,7 @@ function toolSection(demo: boolean): string {
           <div class="drop-cue" aria-hidden="true">Drop PNG or GIF files</div>
         </div>
         <input class="sr-only" id="file-input" type="file" accept="image/png,image/gif,.png,.gif" multiple tabindex="-1" aria-label="Import PNG or GIF frames" />
+        <input class="sr-only" id="project-input" type="file" accept="application/json,.json" tabindex="-1" aria-label="Import Onion Next Frame project" />
         <div class="transport" aria-label="Frame controls">
           <button class="square-key" id="previous-frame" type="button" aria-label="Show previous frame">←</button>
           <div class="counter"><span id="current-counter">FRAME — / —</span><span id="project-name">No sequence loaded</span></div>
@@ -153,6 +154,7 @@ function toolSection(demo: boolean): string {
         <div class="console-actions">
           <button class="key key-secondary" type="button" data-open-import>Import frames</button>
           <button class="key key-primary" id="export-sheet" type="button" disabled>Export contact sheet <kbd>E</kbd></button>
+          <div class="project-actions"><button class="text-button" id="import-project" type="button">Import project</button><button class="text-button" id="export-project" type="button" disabled>Export project</button></div>
           <button class="text-button danger-link" id="clear-project" type="button" disabled>Clear sequence</button>
         </div>
         <p class="keyboard-note">Keyboard: ← → changes frames. Shift jumps to an end.</p>
@@ -221,6 +223,9 @@ async function initializeTool(demo: boolean): Promise<() => void> {
   const exportButton = document.querySelector<HTMLButtonElement>('#export-sheet')!;
   const clearButton = document.querySelector<HTMLButtonElement>('#clear-project')!;
   const fileInput = document.querySelector<HTMLInputElement>('#file-input')!;
+  const projectInput = document.querySelector<HTMLInputElement>('#project-input')!;
+  const importProjectButton = document.querySelector<HTMLButtonElement>('#import-project')!;
+  const exportProjectButton = document.querySelector<HTMLButtonElement>('#export-project')!;
   const dropZone = document.querySelector<HTMLElement>('#drop-zone')!;
 
   function announce(message: string): void {
@@ -331,6 +336,7 @@ async function initializeTool(demo: boolean): Promise<() => void> {
     previousButton.disabled = !hasFrames || current === 0;
     nextButton.disabled = !hasFrames || current === frames.length - 1;
     exportButton.disabled = !hasFrames;
+    exportProjectButton.disabled = !hasFrames;
     clearButton.disabled = !hasFrames;
     counter.textContent = hasFrames ? `FRAME ${String(current + 1).padStart(2, '0')} / ${String(frames.length).padStart(2, '0')}` : 'FRAME — / —';
     projectLabel.textContent = hasFrames ? projectName : 'No sequence loaded';
@@ -427,6 +433,44 @@ async function initializeTool(demo: boolean): Promise<() => void> {
     }, 'image/png');
   }
 
+  function exportProject(): void {
+    if (!frames.length) return;
+    const project: SavedProject = { id: 'latest', name: projectName, savedAt: Date.now(), current, frames, settings };
+    const blob = new Blob([JSON.stringify({ format: 'onion-next-frame', version: 1, project })], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'onion-next-frame-project.json';
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    announce(`Exported a project file with ${frames.length} frames.`);
+  }
+
+  async function importProject(file: File): Promise<void> {
+    try {
+      const parsed = JSON.parse(await file.text()) as { format?: string; version?: number; project?: SavedProject };
+      const imported = parsed.project;
+      if (parsed.format !== 'onion-next-frame' || parsed.version !== 1 || !imported || !Array.isArray(imported.frames) || !imported.frames.length) {
+        throw new Error('This is not an Onion Next Frame project. Choose an exported project JSON file.');
+      }
+      if (imported.frames.some((frame) => !frame.dataUrl?.startsWith('data:image/png') || !frame.width || !frame.height)) {
+        throw new Error('The project has an unreadable frame. Export it again from Onion Next Frame.');
+      }
+      frames = imported.frames;
+      imageCache.clear();
+      current = Math.max(0, Math.min(imported.current ?? 0, frames.length - 1));
+      projectName = imported.name || file.name;
+      settings = imported.settings ? copySettings(imported.settings) : copySettings();
+      syncControlInputs();
+      updateUi(`Imported a project with ${frames.length} frames.`);
+      scheduleSave();
+    } catch (error) {
+      announce(error instanceof SyntaxError ? 'The project file is not valid JSON. Choose an exported project file.' : error instanceof Error ? error.message : 'The project could not be imported.');
+    } finally {
+      projectInput.value = '';
+    }
+  }
+
   document.querySelectorAll<HTMLButtonElement>('[data-open-import]').forEach((button) => {
     button.addEventListener('click', () => fileInput.click(), { signal });
   });
@@ -435,6 +479,9 @@ async function initializeTool(demo: boolean): Promise<() => void> {
   nextButton.addEventListener('click', () => setCurrent(current + 1), { signal });
   slider.addEventListener('input', () => setCurrent(Number(slider.value)), { signal });
   exportButton.addEventListener('click', () => void exportSheet(), { signal });
+  exportProjectButton.addEventListener('click', exportProject, { signal });
+  importProjectButton.addEventListener('click', () => projectInput.click(), { signal });
+  projectInput.addEventListener('change', () => projectInput.files?.[0] && void importProject(projectInput.files[0]), { signal });
   clearButton.addEventListener('click', async () => {
     if (!window.confirm(`Clear ${frames.length} frames from this browser?`)) return;
     frames = [];

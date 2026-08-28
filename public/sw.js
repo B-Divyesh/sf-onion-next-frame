@@ -6,6 +6,7 @@ const SHELL = [
   '/terms',
   '/index.html',
   '/offline.html',
+  '/fallback.css',
   '/manifest.webmanifest',
   '/favicon.svg',
   '/assets/hero-640.webp',

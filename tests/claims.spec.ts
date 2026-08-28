@@ -60,6 +60,23 @@ test('@claim:contact-sheet exports every frame as one PNG', async ({ page }) => 
   await expect(page.locator('#viewer-status')).toHaveText('Exported a contact sheet with 6 frames.');
 });
 
+test('@claim:project-transfer exports and imports a project JSON file', async ({ page }) => {
+  await page.goto('/demo');
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export project' }).click();
+  const download = await downloadPromise;
+  const stream = await download.createReadStream();
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  const file = Buffer.concat(chunks);
+  const parsed = JSON.parse(file.toString());
+  expect(parsed.format).toBe('onion-next-frame');
+  expect(parsed.project.frames).toHaveLength(6);
+  await page.getByRole('button', { name: 'Reset demo' }).click();
+  await page.locator('#project-input').setInputFiles({ name: 'moth-project.json', mimeType: 'application/json', buffer: file });
+  await expect(page.locator('#viewer-status')).toHaveText('Imported a project with 6 frames.');
+});
+
 test('@claim:privacy-local keeps artwork requests on the same origin', async ({ page }) => {
   const requests: string[] = [];
   page.on('request', (request) => requests.push(request.url()));

@@ -1,0 +1,8 @@
+:root { color-scheme: dark; }
+body { margin: 0; min-height: 100vh; padding: 10vw; box-sizing: border-box; background: #090d12; color: #f5f3e8; font: 18px/1.5 system-ui, sans-serif; }
+main { max-width: 40rem; }
+.slot { padding: 12vh 2rem; border: 2px dashed #47627a; background: #111922; }
+.code { color: #ffd166; font: 14px ui-monospace, monospace; }
+h1 { margin: 0 0 1rem; font-size: clamp(2rem, 8vw, 4rem); line-height: 1.05; }
+a { min-height: 44px; display: inline-flex; align-items: center; color: #55e6df; text-underline-offset: .2em; }
+a:focus-visible { outline: 3px solid #55e6df; outline-offset: 3px; }

@@ -12,6 +12,7 @@ Live site: <https://onion-next-frame.sociobot.in>
 - Shows previous, current, and next drawings on one canvas.
 - Gives each layer its own visibility, opacity, and tint controls.
 - Exports every source frame in one PNG contact sheet.
+- Exports and imports a portable project JSON file.
 - Restores the latest real sequence from browser storage after a reload.
 - Works offline after the first successful visit.
 
@@ -43,7 +44,7 @@ npm test
 npm run build
 ```
 
-`npm test` builds and serves the production app before running 16 browser tests. The exact deploy command is `npm run build`. Static output lands in `dist/`, with `dist/index.html` at its root.
+`npm test` builds and serves the production app before running 17 browser tests. The exact deploy command is `npm run build`. Static output lands in `dist/`, with `dist/index.html` at its root.
 
 ## Deploy
 

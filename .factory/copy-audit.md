@@ -32,6 +32,8 @@ The headline states the job in six words. The support line names pixel artists a
 | Import frames or load the sample to start. | 8 | Pass |
 | Show layer | 2 | Pass |
 | Export contact sheet | 3 | Pass |
+| Import project | 2 | Pass |
+| Export project | 2 | Pass |
 | Clear sequence | 2 | Pass |
 | Keyboard: Left and Right changes frames. | 6 | Pass |
 | Shift jumps to an end. | 5 | Pass |
@@ -47,6 +49,14 @@ The headline states the job in six words. The support line names pixel artists a
 | Building the contact sheet… | 4 | Pass |
 | The contact sheet could not be made. | 7 | Pass |
 | Try the export again. | 4 | Pass |
+| Exported a project file with six frames. | 7 | Pass |
+| Imported a project with six frames. | 6 | Pass |
+| This is not an Onion Next Frame project. | 8 | Pass |
+| Choose an exported project JSON file. | 6 | Pass |
+| The project has an unreadable frame. | 6 | Pass |
+| Export it again from Onion Next Frame. | 7 | Pass |
+| The project file is not valid JSON. | 7 | Pass |
+| Choose an exported project file. | 5 | Pass |
 | The sequence was cleared. | 4 | Pass |
 | Import frames to start again. | 5 | Pass |
 | Saved frames could not be opened. | 6 | Pass |
@@ -79,6 +89,7 @@ Dynamic messages use the same nouns: frame, sequence, layer, and contact sheet. 
 | Previous/current/next overlay | layer |
 | Combined review canvas | onion preview |
 | Downloaded overview PNG | contact sheet |
+| Portable saved review | project |
 | Seeded isolated experience | demo |
 | Browser persistence | saved |
 
