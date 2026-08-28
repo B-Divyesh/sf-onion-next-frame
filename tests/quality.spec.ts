@@ -52,29 +52,6 @@ test('metadata, manifest, and original social image are reachable', async ({ pag
   }
 });
 
-test('hashed production assets use long-lived immutable caching', async ({ request }) => {
-  const deployedConfig = JSON.parse(await readFile('public/staticwebapp.config.json', 'utf8')) as {
-    routes?: Array<{ route: string; headers?: Record<string, string> }>;
-  };
-  const assetRoute = deployedConfig.routes?.find(({ route }) => route === '/assets/*');
-  expect(assetRoute?.headers?.['Cache-Control']).toBe('public, max-age=31536000, immutable');
-
-  const indexResponse = await request.get('/');
-  expect(indexResponse.ok()).toBeTruthy();
-  const assetPaths = [...(await indexResponse.text()).matchAll(/(?:src|href)="(\/assets\/[^"?]+\.(?:js|css))"/g)]
-    .map((match) => match[1]);
-  expect(assetPaths).toHaveLength(2);
-  expect(assetPaths.every((assetPath) => /-[A-Za-z0-9_-]{8,}\.(?:js|css)$/.test(assetPath))).toBeTruthy();
-
-  if (process.env.PLAYWRIGHT_BASE_URL) {
-    for (const assetPath of assetPaths) {
-      const assetResponse = await request.get(assetPath);
-      expect(assetResponse.ok()).toBeTruthy();
-      expect(assetResponse.headers()['cache-control']).toBe('public, max-age=31536000, immutable');
-    }
-  }
-});
-
 test('strict CSP loads only same-origin emitted font assets without console errors', async ({ page }) => {
   const errors: string[] = [];
   const fontRequests: string[] = [];
@@ -99,6 +76,35 @@ test('strict CSP loads only same-origin emitted font assets without console erro
   expect(fontRequests.every((url) => new URL(url).origin === pageOrigin)).toBeTruthy();
   expect(fontRequests.every((url) => !url.startsWith('data:'))).toBeTruthy();
   expect(errors).toEqual([]);
+});
+
+test('hashed production assets have long-lived immutable caching', async ({ page, request }) => {
+  await page.goto('/');
+  const assetPaths = await page.locator('script[type="module"][src], link[rel="stylesheet"][href]').evaluateAll((elements) =>
+    elements.map((element) => {
+      const attribute = element instanceof HTMLScriptElement ? 'src' : 'href';
+      return new URL(element.getAttribute(attribute) ?? '', location.href).pathname;
+    })
+  );
+
+  expect(assetPaths).toHaveLength(2);
+  for (const assetPath of assetPaths) {
+    expect(assetPath).toMatch(/^\/assets\/.+-[A-Za-z0-9_-]{8,}\.(?:js|css)$/);
+    const response = await request.get(assetPath);
+    expect(response.ok()).toBeTruthy();
+    const cacheControl = response.headers()['cache-control'] ?? '';
+    const maxAge = Number(cacheControl.match(/max-age=(\d+)/)?.[1] ?? 0);
+    expect(cacheControl).toContain('public');
+    expect(cacheControl).toContain('immutable');
+    expect(cacheControl).not.toContain('must-revalidate');
+    expect(maxAge).toBeGreaterThanOrEqual(31_536_000);
+  }
+
+  const deployedConfig = JSON.parse(await readFile('public/staticwebapp.config.json', 'utf8')) as {
+    routes: Array<{ route: string; headers?: Record<string, string> }>;
+  };
+  const assetRoute = deployedConfig.routes.find((route) => route.route === '/assets/*');
+  expect(assetRoute?.headers?.['Cache-Control']).toBe('public, max-age=31536000, immutable');
 });
 
 test('service worker installs the current cache generation for updates', async ({ page }) => {
