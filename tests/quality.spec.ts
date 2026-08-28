@@ -52,6 +52,29 @@ test('metadata, manifest, and original social image are reachable', async ({ pag
   }
 });
 
+test('hashed production assets use long-lived immutable caching', async ({ request }) => {
+  const deployedConfig = JSON.parse(await readFile('public/staticwebapp.config.json', 'utf8')) as {
+    routes?: Array<{ route: string; headers?: Record<string, string> }>;
+  };
+  const assetRoute = deployedConfig.routes?.find(({ route }) => route === '/assets/*');
+  expect(assetRoute?.headers?.['Cache-Control']).toBe('public, max-age=31536000, immutable');
+
+  const indexResponse = await request.get('/');
+  expect(indexResponse.ok()).toBeTruthy();
+  const assetPaths = [...(await indexResponse.text()).matchAll(/(?:src|href)="(\/assets\/[^"?]+\.(?:js|css))"/g)]
+    .map((match) => match[1]);
+  expect(assetPaths).toHaveLength(2);
+  expect(assetPaths.every((assetPath) => /-[A-Za-z0-9_-]{8,}\.(?:js|css)$/.test(assetPath))).toBeTruthy();
+
+  if (process.env.PLAYWRIGHT_BASE_URL) {
+    for (const assetPath of assetPaths) {
+      const assetResponse = await request.get(assetPath);
+      expect(assetResponse.ok()).toBeTruthy();
+      expect(assetResponse.headers()['cache-control']).toBe('public, max-age=31536000, immutable');
+    }
+  }
+});
+
 test('strict CSP loads only same-origin emitted font assets without console errors', async ({ page }) => {
   const errors: string[] = [];
   const fontRequests: string[] = [];
