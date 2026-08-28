@@ -87,7 +87,8 @@ test('@claim:privacy-local keeps artwork requests on the same origin', async ({ 
   });
   await page.waitForTimeout(100);
   expect(requests.length).toBeGreaterThan(0);
-  expect(requests.every((url) => new URL(url).origin === 'http://127.0.0.1:4173')).toBeTruthy();
+  const pageOrigin = new URL(page.url()).origin;
+  expect(requests.every((url) => new URL(url).origin === pageOrigin)).toBeTruthy();
   expect(await page.locator('iframe').count()).toBe(0);
   expect(await page.locator('input[type="password"]').count()).toBe(0);
 });

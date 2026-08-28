@@ -1,75 +1,57 @@
-# Onion Next Frame — build handoff
+# Onion Next Frame — repair handoff
 
-Work order: `onion-next-frame-build-1`
+Work order: `onion-next-frame-repair-1`
+
+Base candidate: `a50284c2fbbd36693fc8b22d90e012cfd6a83dbc`
 
 Completed: 2026-08-28
 
-Version: 1.0.0
+## Repair made
 
-## What shipped
+The deployed page returned `font-src 'self'`, while Vite had inlined a few small Fontsource subsets as `data:font/...` CSS URLs. A fresh live Chromium visit reproduced two blocked-font CSP console errors.
 
-- A Vite and TypeScript offline PWA at `/`, with real `/demo`, `/privacy`, `/terms`, and styled 404 routes.
-- Natural-order multi-PNG import and animated GIF frame decoding. All decoding happens in the browser.
-- A layered canvas with previous, current, and next drawings. Each layer has visibility, opacity, tint colour, and tint enablement controls.
-- Frame scrubber, numbered frame strip, previous/next buttons, and Left/Right keyboard navigation. Shift jumps to either end.
-- PNG contact-sheet export with every source frame and a marker for the selected frame.
-- Portable JSON project export and import.
-- IndexedDB persistence for the latest real project. Clear sequence removes it.
-- An isolated `/demo` with six in-memory sample frames, reset, and an explicit exit to real mode.
-- A versioned service worker, app-shell/runtime caching, offline fallback, install manifest, icons, and update prompt.
-- Product-specific pixel/demoscene design, self-hosted fonts, generated original hero art, responsive WebP derivatives, and a 1200×630 social image.
-- Plain privacy and terms pages, MIT license, metadata, canonical links, sitemap, robots file, security headers, and deployment fallback configuration.
+`vite.config.ts` now sets `build.assetsInlineLimit: 0`. Every Fontsource WOFF/WOFF2 subset is emitted as a hashed file under `/assets/`, so fonts remain self-hosted and the existing strict `font-src 'self'` policy is unchanged. The production preview now serves the same CSP as `staticwebapp.config.json`, making the browser enforce it before deployment. The service-worker cache name is `onion-next-frame-v2`, so installed copies replace the stale cached shell.
 
-## Verification
+## Regression coverage
+
+- `strict CSP loads only same-origin emitted font assets without console errors` loads the production build under the real CSP, checks the preview and deployment policy match, waits for `document.fonts`, asserts font requests are same-origin rather than `data:`, and fails on any console error.
+- `service worker installs the current cache generation for updates` checks the v2 cache after registration.
+- `PLAYWRIGHT_BASE_URL=<url> npm test -- --grep "strict CSP"` runs the same CSP/console test against a live deployment without starting a local server.
+
+## Verification before deployment
 
 Run from a clean checkout:
 
 ```sh
-npm install
-npm test
+npm ci
 npm run build
+npm test
+npm audit --omit=dev
 ```
 
-Results in this worker:
+Results:
 
-- `npm test`: **17 passed** in Chromium. This includes every tag in `.factory/claims.json`.
-- Offline test: a fresh `/demo` visit, controlled reload, offline reload, and live six-frame viewer all passed.
-- IndexedDB restore, PNG natural sorting, two-frame GIF decoding, contact-sheet PNG, and JSON round trip all passed.
-- Keyboard route focus, browser back, Arrow navigation, and a 390×844 viewport all passed.
-- Axe: no serious or critical findings on home, demo, privacy, terms, or the SPA 404.
-- `/opt/fleet/lib/verify-url.sh`: no console errors; title, `lang`, one `h1`, `main`, image alt text, and button labels passed.
+- Exact clean build command `npm ci && npm run build`: passed. `dist/index.html` exists.
+- Built CSS contains no `data:font/` URLs; emitted WOFF2 assets are normal same-origin `/assets/*.woff2` files. JS is 34.82 KB raw / 12.12 KB gzip; CSS is 17.87 KB raw / 4.67 KB gzip.
+- `npm test`: **19 passed** in Chromium. This includes all nine tagged product claims, keyboard/back-navigation, the 390×844 mobile layout, offline reload, service-worker cache generation, privacy network interception, and the CSP font regression.
+- The route tests run Axe on `/`, `/demo`, `/privacy`, `/terms`, and the 404 route: no serious or critical findings.
+- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/ .factory/evidence/repair-local`: passed with zero console errors; title, `lang`, one `h1`, `main`, image alt text, and button labels passed.
 - `npm audit --omit=dev`: 0 vulnerabilities.
-- `npm run build`: passed; `dist/index.html` is present.
+- Mobile Lighthouse against the production preview at `/demo`: Performance **100**, Accessibility **100**, Best Practices **100**, SEO **100**; FCP **1.4 s**, LCP **1.4 s**, CLS **0.001**.
 
-Production asset sizes:
+Local verification artefacts are in `.factory/evidence/repair-local/`.
 
-- JavaScript: 34.8 KB raw / 12.1 KB gzip.
-- CSS: 24.6 KB raw / 10.2 KB gzip.
-- Self-hosted font files emitted by Vite: about 88 KB total.
-- Mobile hero WebP: 12.8 KB. Desktop hero and social image: about 30 KB each.
+## Deployment
 
-Lighthouse 13 mobile run against the production preview at `/demo`:
+Deploy class remains **static**. Build output is `dist/`, deployed with:
 
-- Performance: **100**
-- Accessibility: **100**
-- Best practices: **100**
-- SEO: **100**
-- FCP: **1.4 s**
-- LCP: **1.5 s**
-- Total blocking time: **0 ms**
-- CLS: **0.001**
-- INP: not available in this lab run because there was no measured interaction.
+```sh
+/opt/fleet/lib/deploy-static.sh onion-next-frame dist
+```
 
-Evidence is in `.factory/evidence/`.
+Run the live CSP regression and `verify-url.sh` after deployment. Append the resulting evidence here.
 
 ## Known limits
 
-- The product accepts PNG and GIF only, matching the brief. It does not decode APNG, video, or editor project formats.
-- Large image sequences depend on the browser's memory and IndexedDB quota. Source files remain the durable backup.
-- Production hosting headers and the custom 404 are configured but were checked through the local static preview, not a deployed Azure site.
-
-## Next steps
-
-- Deploy `dist/` through the factory pipeline.
-- Run a post-deploy crawl and Lighthouse check at `https://onion-next-frame.sociobot.in`.
-- Watch whether repeat imports meet the brief's 14-day adoption measure. No analytics were added, so any measurement should remain privacy-preserving and separate from artwork.
+- The product accepts PNG and GIF only; it does not decode APNG, video, or editor project formats.
+- Large image sequences depend on browser memory and IndexedDB quota; source files remain the durable backup.

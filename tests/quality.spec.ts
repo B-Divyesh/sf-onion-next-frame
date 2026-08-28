@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 for (const [route, title] of [
   ['/', 'Onion Next Frame — Compare animation frames'],
@@ -49,4 +50,37 @@ test('metadata, manifest, and original social image are reachable', async ({ pag
   for (const path of ['/manifest.webmanifest', '/assets/onion-next-frame-og.webp', '/robots.txt', '/sitemap.xml']) {
     expect((await request.get(path)).ok()).toBeTruthy();
   }
+});
+
+test('strict CSP loads only same-origin emitted font assets without console errors', async ({ page }) => {
+  const errors: string[] = [];
+  const fontRequests: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('request', (request) => {
+    if (request.resourceType() === 'font') fontRequests.push(request.url());
+  });
+
+  const response = await page.goto('/');
+  await page.evaluate(async () => { await document.fonts.ready; });
+
+  const deployedConfig = JSON.parse(await readFile('public/staticwebapp.config.json', 'utf8')) as {
+    globalHeaders: { 'Content-Security-Policy': string };
+  };
+  const policy = deployedConfig.globalHeaders['Content-Security-Policy'];
+  expect(policy).toContain("font-src 'self'");
+  expect(response?.headers()['content-security-policy']).toBe(policy);
+  expect(fontRequests).not.toHaveLength(0);
+  const pageOrigin = new URL(page.url()).origin;
+  expect(fontRequests.every((url) => new URL(url).origin === pageOrigin)).toBeTruthy();
+  expect(fontRequests.every((url) => !url.startsWith('data:'))).toBeTruthy();
+  expect(errors).toEqual([]);
+});
+
+test('service worker installs the current cache generation for updates', async ({ page }) => {
+  await page.goto('/demo');
+  await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+  const cacheNames = await page.evaluate(async () => caches.keys());
+  expect(cacheNames).toContain('onion-next-frame-v2');
 });
