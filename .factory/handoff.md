@@ -1,24 +1,30 @@
 # Onion Next Frame — repair handoff
 
-Work order: `onion-next-frame-repair-1`
+Work order: `onion-next-frame-repair-2`
 
-Base candidate: `a50284c2fbbd36693fc8b22d90e012cfd6a83dbc`
+Verifier report: `84d8438c78cd1126979d52bb8dee01347f0f348c`
+
+Candidate repaired: `b1b88469f1965b8cc7e6bce558ce3387af45face`
 
 Completed: 2026-08-28
 
-## Repair made
+## Release blocker repaired
 
-The deployed page returned `font-src 'self'`, while Vite had inlined a few small Fontsource subsets as `data:font/...` CSS URLs. A fresh live Chromium visit reproduced two blocked-font CSP console errors.
+The independent verifier found one release blocker: live content-hashed JavaScript and CSS returned `Cache-Control: public, must-revalidate, max-age=30`.
 
-`vite.config.ts` now sets `build.assetsInlineLimit: 0`. Every Fontsource WOFF/WOFF2 subset is emitted as a hashed file under `/assets/`, so fonts remain self-hosted and the existing strict `font-src 'self'` policy is unchanged. The production preview now serves the same CSP as `staticwebapp.config.json`, making the browser enforce it before deployment. The service-worker cache name is `onion-next-frame-v2`, so installed copies replace the stale cached shell.
+`public/staticwebapp.config.json` now assigns `/assets/*` this production policy:
 
-## Regression coverage
+```text
+Cache-Control: public, max-age=31536000, immutable
+```
 
-- `strict CSP loads only same-origin emitted font assets without console errors` loads the production build under the real CSP, checks the preview and deployment policy match, waits for `document.fonts`, asserts font requests are same-origin rather than `data:`, and fails on any console error.
-- `service worker installs the current cache generation for updates` checks the v2 cache after registration.
-- `PLAYWRIGHT_BASE_URL=<url> npm test -- --grep "strict CSP"` runs the same CSP/console test against a live deployment without starting a local server.
+The Vite production preview mirrors that path-specific policy. This makes the deployment behavior testable before release without applying immutable caching to HTML. The regression test discovers the emitted hashed JS and CSS, fetches each file, and asserts `public`, at least one year of `max-age`, `immutable`, and no `must-revalidate`. It also checks the checked-in Azure Static Web Apps rule.
 
-## Verification before deployment
+The clean install exposed Vite development-server advisories that do not affect the static runtime. Vite was pinned from 7.1.3 to 7.3.6; `npm audit` now reports zero vulnerabilities.
+
+No product behavior, researched scope, visual design, storage format, claim, or deployment class changed.
+
+## Local verification
 
 Run from a clean checkout:
 
@@ -26,50 +32,48 @@ Run from a clean checkout:
 npm ci
 npm run build
 npm test
-npm audit --omit=dev
+npm audit
 ```
 
 Results:
 
-- Exact clean build command `npm ci && npm run build`: passed. `dist/index.html` exists.
-- Built CSS contains no `data:font/` URLs; emitted WOFF2 assets are normal same-origin `/assets/*.woff2` files. JS is 34.82 KB raw / 12.12 KB gzip; CSS is 17.87 KB raw / 4.67 KB gzip.
-- `npm test`: **19 passed** in Chromium. This includes all nine tagged product claims, keyboard/back-navigation, the 390×844 mobile layout, offline reload, service-worker cache generation, privacy network interception, and the CSP font regression.
-- The route tests run Axe on `/`, `/demo`, `/privacy`, `/terms`, and the 404 route: no serious or critical findings.
-- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/ .factory/evidence/repair-local`: passed with zero console errors; title, `lang`, one `h1`, `main`, image alt text, and button labels passed.
-- `npm audit --omit=dev`: 0 vulnerabilities.
-- Mobile Lighthouse against the production preview at `/demo`: Performance **100**, Accessibility **100**, Best Practices **100**, SEO **100**; FCP **1.4 s**, LCP **1.4 s**, CLS **0.001**.
+- `npm ci`: passed from the lockfile; 28 packages installed and zero vulnerabilities reported.
+- `npm run build`: passed TypeScript checking and the Vite production build; `dist/index.html` exists.
+- `npm test`: **20/20 passed** in Chromium 140. This covers all nine claim tests, import/export, privacy interception, real-project restore, offline reload, service-worker update cache, keyboard/history/focus, the 390×844 layout, CSP, all routes, and the cache regression.
+- Every command in `.factory/claims.json` was also run independently from the demo entry point; all nine passed 1/1.
+- Axe found no serious or critical issues on `/`, `/demo`, `/privacy`, `/terms`, or the styled 404 route.
+- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/ .factory/evidence/repair-2-local` passed: HTTP 200, zero console errors, title, `lang`, one `h1`, `main`, alt text, and button labels.
+- Vite preview returned `Cache-Control: public, max-age=31536000, immutable` for the emitted hashed JS and CSS.
+- Bundle sizes: JS 34.82 KB raw / 12.12 KB gzip; CSS 17.87 KB raw / 4.67 KB gzip.
+- Lighthouse 12.2.0 desktop: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 0.3 s, CLS 0.003, TBT 0 ms.
+- Lighthouse 12.2.0 mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.4 s, CLS 0.001, TBT 0 ms.
 
-Local verification artefacts are in `.factory/evidence/repair-local/`.
+Local evidence is in `.factory/evidence/repair-2-local/`.
 
-## Deployment
+There is no package/consumer surface, backend, account, payment, rate limit, or Entra identity flow for this static local-first PWA, so those checks are not applicable.
 
-Deploy class remains **static**. Build output is `dist/`, deployed with:
+## Deployment and live verification
+
+Deploy class remains **static**, with `dist/` as the artifact:
 
 ```sh
 /opt/fleet/lib/deploy-static.sh onion-next-frame dist
 ```
 
-Deployment completed successfully with commit `c886dbcf6b315f17951035083867a9296f7f7111`.
+Final deployment `39036bf5-bcc3-4c15-9801-413e3afcbc54` completed successfully at `https://onion-next-frame.sociobot.in` from application commit `2175ddc`.
 
-Live verification at `https://onion-next-frame.sociobot.in`:
+- Live hashed JS and CSS return HTTP 200 with `Cache-Control: public, max-age=31536000, immutable`.
+- `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test`: **20/20 passed**, including the exact cache regression, all nine claims, desktop/390px browser behavior, keyboard, Axe, privacy, offline/update, CSP, and route checks.
+- Live `verify-url.sh` passed with zero console errors and all structural checks.
+- Local and live SHA-256 values match exactly for `index.html`, `index-CFni8ZHK.js`, and `index-DIKJgCi2.css`.
+- Live response policy retains HTTPS/HSTS, CSP, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and restrictive Permissions-Policy headers.
+- Live mobile Lighthouse 12.2.0: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.2 s, CLS 0.001, TBT 0 ms.
 
-- `/opt/fleet/lib/deploy-static.sh onion-next-frame dist`: succeeded (Azure Static Web Apps deployment `0d5a2c09-c669-47b3-8eeb-762872236e68`).
-- `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test`: **19 passed**. This repeats the claims, browser, keyboard, 390px mobile, Axe, offline/update, privacy, identity, and CSP tests against production.
-- The live CSP regression confirmed `font-src 'self'` is still present, each loaded font is a same-origin asset, and the console is empty.
-- `/opt/fleet/lib/verify-url.sh https://onion-next-frame.sociobot.in/ .factory/evidence/repair-live`: passed with **zero console errors**; title, language, one `h1`, `main`, image alt text, and button labels passed.
-- The live response is HTTPS 200 and retains `Content-Security-Policy`, `X-Content-Type-Options: nosniff`, and `Referrer-Policy: strict-origin-when-cross-origin`.
-
-Live verification artefacts are in `.factory/evidence/repair-live/`.
+Live evidence is in `.factory/evidence/repair-2-live/`.
 
 ## Known limits
 
 - The product accepts PNG and GIF only; it does not decode APNG, video, or editor project formats.
 - Large image sequences depend on browser memory and IndexedDB quota; source files remain the durable backup.
 
----
-
-# Independent verification 1 — FAIL
-
-Verified 2026-08-28 for candidate `b1b88469f1965b8cc7e6bce558ce3387af45face` at `https://onion-next-frame.sociobot.in`.
-
-The result is **FAIL**. The clean-install build and both complete local/live Chromium suites passed 19/19; every listed claim passed independently, as did live Axe, offline reload, keyboard/mobile, privacy, CSP, and byte-for-byte deployment-identity checks. The release is blocked because the deployed hashed JS and CSS use `Cache-Control: public, must-revalidate, max-age=30` rather than long-lived immutable caching. This violates the PWA cache policy. See `.factory/verification-1.md` for exact commands, evidence, severity, and the required remediation.
+No release-blocking gaps remain from the independent verification report.
