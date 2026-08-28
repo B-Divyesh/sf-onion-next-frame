@@ -17,7 +17,6 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
           if (worker.state === 'installed' && navigator.serviceWorker.controller) showUpdate(registration);
         });
       });
-      navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
     } catch {
       // The app remains usable when service worker registration is blocked.
     }

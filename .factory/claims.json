@@ -1,0 +1,58 @@
+[
+  {
+    "id": "demo-sandbox",
+    "claim": "The sample demo saves nothing and does not read the real project",
+    "where": "demo banner, privacy page, README",
+    "test": "npm test -- --grep @claim:demo-sandbox",
+    "sandbox": "fresh browser context at /demo; assert six frames, no app IndexedDB, and reset restores defaults"
+  },
+  {
+    "id": "sequence-import",
+    "claim": "Imports numbered PNG files and animated GIF frames",
+    "where": "tool empty state, how it works, README",
+    "test": "npm test -- --grep @claim:sequence-import",
+    "sandbox": "fresh browser context; import out-of-order PNG fixtures and a two-frame GIF fixture"
+  },
+  {
+    "id": "three-layer-preview",
+    "claim": "Shows previous, current, and next frames with independent layer controls",
+    "where": "viewer and how it works, README",
+    "test": "npm test -- --grep @claim:three-layer-preview",
+    "sandbox": "demo data; assert three controls, neighbour labels, and changed canvas pixels after an opacity adjustment"
+  },
+  {
+    "id": "contact-sheet",
+    "claim": "Exports every source frame in one PNG contact sheet",
+    "where": "export button, how it works, README",
+    "test": "npm test -- --grep @claim:contact-sheet",
+    "sandbox": "demo data; download export, verify PNG signature, size, name, and six-frame completion status"
+  },
+  {
+    "id": "privacy-local",
+    "claim": "Images stay on the device with no account, upload, analytics, or advertising",
+    "where": "landing facts, privacy page, README",
+    "test": "npm test -- --grep @claim:privacy-local",
+    "sandbox": "capture the complete demo flow network log; assert every request is same-origin and no account or embedded ad controls exist"
+  },
+  {
+    "id": "offline-reload",
+    "claim": "Works offline after the first visit",
+    "where": "landing facts, README",
+    "test": "npm test -- --grep @claim:offline-reload",
+    "sandbox": "fresh browser context at /demo; wait for the service worker, reload under offline mode, and assert the sample viewer works"
+  },
+  {
+    "id": "local-restore",
+    "claim": "Restores the latest real sequence after a reload",
+    "where": "privacy page, README",
+    "test": "npm test -- --grep @claim:local-restore",
+    "sandbox": "fresh browser context; import two PNG files, wait for IndexedDB, reload, and assert both frames return"
+  },
+  {
+    "id": "free-use",
+    "claim": "Free to use",
+    "where": "landing facts, terms, README",
+    "test": "npm test -- --grep @claim:free-use",
+    "sandbox": "fresh browser context; assert the free-use fact and absence of account, buy, checkout, or login gates"
+  }
+]

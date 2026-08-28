@@ -135,14 +135,14 @@ function toolSection(demo: boolean): string {
           </div>
           <div class="drop-cue" aria-hidden="true">Drop PNG or GIF files</div>
         </div>
-        <input class="sr-only" id="file-input" type="file" accept="image/png,image/gif,.png,.gif" multiple tabindex="-1" />
+        <input class="sr-only" id="file-input" type="file" accept="image/png,image/gif,.png,.gif" multiple tabindex="-1" aria-label="Import PNG or GIF frames" />
         <div class="transport" aria-label="Frame controls">
           <button class="square-key" id="previous-frame" type="button" aria-label="Show previous frame">←</button>
           <div class="counter"><span id="current-counter">FRAME — / —</span><span id="project-name">No sequence loaded</span></div>
           <button class="square-key" id="next-frame" type="button" aria-label="Show next frame">→</button>
         </div>
         <input id="frame-slider" class="frame-slider" type="range" min="0" max="0" value="0" aria-label="Current frame" disabled />
-        <div class="frame-strip" id="frame-strip" aria-label="Sequence frames"></div>
+        <div class="frame-strip" id="frame-strip" role="group" aria-label="Sequence frames"></div>
         <p class="viewer-status" id="viewer-status" role="status">Import frames or load the sample to start.</p>
       </div>
       <aside class="console" aria-label="Onion layer settings">
@@ -582,5 +582,8 @@ export function showUpdate(registration: ServiceWorkerRegistration): void {
   const toast = document.querySelector<HTMLElement>('#update-toast');
   if (!toast) return;
   toast.hidden = false;
-  document.querySelector('#apply-update')?.addEventListener('click', () => registration.waiting?.postMessage({ type: 'SKIP_WAITING' }), { once: true });
+  document.querySelector('#apply-update')?.addEventListener('click', () => {
+    navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), { once: true });
+    registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
+  }, { once: true });
 }

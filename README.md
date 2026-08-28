@@ -1,14 +1,66 @@
 # Onion Next Frame
 
-Live: https://onion-next-frame.sociobot.in — built by the Param Factory (`pwa-offline`).
+Compare a pixel animation with its previous and next frames.
 
-See `.factory/brief.json` for the researched problem this solves and `.factory/design.md` for the visual system.
+Onion Next Frame is a small review surface for solo pixel artists and tiny game teams. It sits beside a main editor. It does not add painting, hosting, collaboration, or generated frames.
 
-## Develop
+Live site: <https://onion-next-frame.sociobot.in>
 
-```
+## What it does
+
+- Imports naturally sorted PNG sequences and animated GIF frames.
+- Shows previous, current, and next drawings on one canvas.
+- Gives each layer its own visibility, opacity, and tint controls.
+- Exports every source frame in one PNG contact sheet.
+- Restores the latest real sequence from browser storage after a reload.
+- Works offline after the first successful visit.
+
+Images stay on the device. There is no account, upload, analytics, advertising, or payment gate. Real projects use IndexedDB. The sample demo uses memory only.
+
+## Try the isolated demo
+
+Open `/demo` or <https://onion-next-frame.sociobot.in/demo>. Six original sample frames load immediately. The cyan banner remains visible while demo mode is active. **Reset demo** restores the sample. **Start for real** discards it and returns to an empty or previously saved project.
+
+Demo details and its storage boundary are in [`.factory/demo.md`](.factory/demo.md). Every product claim and its browser test are in [`.factory/claims.json`](.factory/claims.json).
+
+## Run locally
+
+Requires Node.js 20 or newer.
+
+```sh
 npm install
 npm run dev
-npm test
-npm run build   # -> dist/
 ```
+
+Vite prints the local URL. Open `/demo` for the seeded path.
+
+## Test and build
+
+Playwright 1.58.2 is pinned because the factory image provides that browser version.
+
+```sh
+npm test
+npm run build
+```
+
+`npm test` builds and serves the production app before running 16 browser tests. The exact deploy command is `npm run build`. Static output lands in `dist/`, with `dist/index.html` at its root.
+
+## Deploy
+
+Upload `dist/` to the static host. `staticwebapp.config.json` provides the history fallback, 404 page, security headers, and asset rules expected by Azure Static Web Apps. Deployment, DNS, and billing stay outside this repository.
+
+## Browser notes
+
+Current evergreen browsers can import PNG files. Animated GIF disposal modes are decoded in-browser with `gifuct-js`. Very large sequences can reach the browser's IndexedDB quota; original source files remain the backup.
+
+## Product records
+
+- [Brief](.factory/brief.json)
+- [Visual thesis and asset provenance](.factory/design.md)
+- [Demo sandbox](.factory/demo.md)
+- [Testable claims](.factory/claims.json)
+- [Handoff](.factory/handoff.md)
+
+## License
+
+MIT. See [LICENSE](LICENSE).
