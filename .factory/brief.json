@@ -1,0 +1,9 @@
+{
+  "slug": "onion-next-frame",
+  "title": "Onion Next Frame",
+  "summary": "Compare a pixel animation with its previous and next frames",
+  "artifact_class": "pwa-offline",
+  "monetization": "free",
+  "smallest_useful_product": "Offline PWA: drag in a numbered PNG/GIF sequence, scrub current/previous/next with independently adjustable tint and opacity, and export a reference contact sheet.",
+  "constraints": "All image decoding stays in-browser; respect GIF/video codec limits; do not claim a substitute for licensed editors."
+}
