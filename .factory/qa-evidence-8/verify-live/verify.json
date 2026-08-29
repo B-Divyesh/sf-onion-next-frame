@@ -1,6 +1,6 @@
 {
-  "url": "https://onion-next-frame.sociobot.in",
-  "loadMs": 919,
+  "url": "https://onion-next-frame.sociobot.in/",
+  "loadMs": 727,
   "errors": [],
   "a11y": {
     "title": "Onion Next Frame — Compare animation frames",
@@ -9,6 +9,6 @@
     "main": true,
     "imgsMissingAlt": 0,
     "buttonsUnlabeled": 0,
-    "textLength": 1773
+    "textLength": 1817
   }
 }
