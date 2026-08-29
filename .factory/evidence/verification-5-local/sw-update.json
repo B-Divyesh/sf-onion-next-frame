@@ -1,0 +1,20 @@
+{
+  "before": {
+    "controlled": true,
+    "caches": [
+      "onion-next-frame-v4"
+    ],
+    "counter": "FRAME 03 / 06"
+  },
+  "toastVisible": true,
+  "after": {
+    "controlled": true,
+    "caches": [
+      "onion-next-frame-v5"
+    ],
+    "counter": "FRAME 03 / 06",
+    "url": "http://127.0.0.1:4180/demo"
+  },
+  "consoleErrors": [],
+  "pageErrors": []
+}

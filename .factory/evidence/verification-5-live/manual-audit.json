@@ -1,0 +1,178 @@
+{
+  "desktopFlow": {
+    "firstRead": {
+      "title": "Onion Next Frame — Compare animation frames",
+      "h1": "Compare the frames before and after",
+      "lede": "For pixel artists checking motion between drawings without changing their main editor.",
+      "primary": "Try it with sample data",
+      "primaryHint": "Loads a 6-frame run cycle.",
+      "primaryVisible": true
+    },
+    "mainResponse": {
+      "status": 200,
+      "headers": {
+        "cache-control": "public, must-revalidate, max-age=30",
+        "content-encoding": "br",
+        "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+        "content-type": "text/html",
+        "date": "Sat, 29 Aug 2026 07:09:30 GMT",
+        "etag": "\"90750282\"",
+        "last-modified": "Sat, 29 Aug 2026 06:41:47 GMT",
+        "permissions-policy": "camera=(), microphone=(), geolocation=()",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "strict-transport-security": "max-age=10886400; includeSubDomains; preload",
+        "vary": "Accept-Encoding",
+        "x-content-type-options": "nosniff",
+        "x-dns-prefetch-control": "off",
+        "x-xss-protection": "1; mode=block"
+      }
+    },
+    "demoInitial": {
+      "url": "https://onion-next-frame.sociobot.in/?demo=1",
+      "banner": true,
+      "counter": "FRAME 03 / 06",
+      "frameButtons": 6,
+      "status": "Loaded 6 sample frames. Nothing is saved."
+    },
+    "keyboard": {
+      "afterRight": "FRAME 04 / 06",
+      "afterShiftRight": "FRAME 06 / 06"
+    },
+    "reset": {
+      "counter": "FRAME 03 / 06",
+      "previousOpacity": "28%",
+      "currentOpacity": "100%",
+      "nextOpacity": "28%"
+    },
+    "sheet": {
+      "filename": "onion-next-frame-contact-sheet.png",
+      "bytes": 31138,
+      "signature": "PNG",
+      "width": 880,
+      "height": 560,
+      "sha256": "b2fc101d4ba6e58547009966a6bf664531243f8cf7e76e60cb50d3f5bed1c64e"
+    },
+    "project": {
+      "filename": "onion-next-frame-project.json",
+      "format": "onion-next-frame",
+      "version": 1,
+      "frames": 6
+    },
+    "invalidJsonStatus": "The project file is not valid JSON. Choose an exported project file.",
+    "missingSettingsStatus": "Cannot read properties of undefined (reading 'visible')",
+    "validProjectRecovery": "Imported a project with 6 frames.",
+    "oneFrame": {
+      "status": "Loaded 1 frame.",
+      "counter": "FRAME 01 / 01",
+      "previousDisabled": true,
+      "nextDisabled": true
+    },
+    "corruptGifStatus": "broken.gif has no readable GIF frames.",
+    "gifRecovery": {
+      "status": "Loaded 2 frames.",
+      "counter": "FRAME 02 / 02"
+    },
+    "hundredFrames": {
+      "counter": "FRAME 02 / 100",
+      "buttons": 100,
+      "firstLabel": "Show frame 1: run-001.png",
+      "lastLabel": "Show frame 100: run-100.png",
+      "bytes": 255161,
+      "width": 880,
+      "height": 6356,
+      "status": "Exported a contact sheet with 100 frames."
+    },
+    "axeSeriousCritical": {
+      "/": [],
+      "/demo": [],
+      "/privacy": [],
+      "/terms": []
+    },
+    "links": {
+      "/": 200,
+      "/demo": 200,
+      "/privacy": 200,
+      "/?demo=1": 200,
+      "/terms": 200
+    },
+    "requests": {
+      "total": 64,
+      "origins": [
+        "https://onion-next-frame.sociobot.in"
+      ],
+      "unique": [
+        "https://onion-next-frame.sociobot.in/",
+        "https://onion-next-frame.sociobot.in/assets/index-RIbddhXW.js",
+        "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+        "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+        "https://onion-next-frame.sociobot.in/assets/hero-1200.webp",
+        "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+        "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+        "https://onion-next-frame.sociobot.in/demo",
+        "https://onion-next-frame.sociobot.in/privacy",
+        "https://onion-next-frame.sociobot.in/terms"
+      ],
+      "failed": []
+    },
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  "invalidProject": {
+    "malformedStatus": "Cannot read properties of undefined (reading 'visible')",
+    "staleCounter": "FRAME 03 / 06",
+    "staleButtons": 6,
+    "pageErrors": [
+      "Cannot set properties of undefined (setting 'opacity')"
+    ],
+    "consoleErrors": [],
+    "validImportRecovery": "Imported a project with 6 frames."
+  },
+  "demoIsolation": {
+    "opensInDemo": [],
+    "demoCounter": "FRAME 03 / 06",
+    "afterLeavingCounter": "FRAME 01 / 01",
+    "afterLeavingStatus": "Restored 1 saved frames from this browser."
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scrollWidth": 390,
+    "undersized": [],
+    "opacityBoxes": [
+      {
+        "width": 324,
+        "height": 44
+      },
+      {
+        "width": 324,
+        "height": 44
+      },
+      {
+        "width": 324,
+        "height": 44
+      }
+    ],
+    "axeSeriousCritical": []
+  },
+  "keyboardReducedMotion": {
+    "skip": {
+      "text": "Skip to main content",
+      "outlineWidth": "3px",
+      "outlineColor": "rgb(85, 230, 223)",
+      "visible": true
+    },
+    "demoActivated": true,
+    "headingFocused": true,
+    "reducedDuration": "1e-05s"
+  },
+  "offline": {
+    "heading": "Compare the frames before and after",
+    "counter": "FRAME 03 / 06",
+    "networkState": "Offline mode",
+    "cacheNames": [
+      "onion-next-frame-v4"
+    ]
+  }
+}
