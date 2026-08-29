@@ -1,58 +1,35 @@
-# Verification handoff — Onion Next Frame
+# Review handoff — Onion Next Frame
 
-Work order: `onion-next-frame-verify-6`
-
+Work order: `onion-next-frame-review-2`
 Completed: 2026-08-29 UTC
-
-Status: **PASS — candidate and live deployment verified**
-
-Candidate: `45d2494a6c89a519363d287ccd9055ce5d411e91`
+Status: **FAIL — review findings remain; product code was not changed.**
 
 Live: <https://onion-next-frame.sociobot.in>
-
 Demo: <https://onion-next-frame.sociobot.in/?demo=1>
+Full report: [`.factory/review-2.md`](review-2.md)
 
-Full report: [`.factory/verification-6.md`](verification-6.md)
+## Done and verified
 
-## Verification summary
+- Cold desktop and 390 px first-read gate passed: purpose, audience, and first action are visible before scrolling.
+- The one-click sample demo, banner, reset behavior, in-memory sandbox boundary, local restore, offline reload, and same-origin privacy flow passed.
+- All ten exact `claims.json` commands passed from `/tmp/onion-next-frame-review-2`, a separate clean checkout.
+- `npm test` passed 32/32 locally; `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test` passed 32/32 live; `npm run build` passed and produced `dist/`.
+- Routes, metadata, 404, links, keyboard/history focus, 390 px touch targets, CSP, and earlier findings were independently rechecked.
 
-- Every command in `.factory/claims.json`: PASS, 10/10 independently.
-- Cold first read and one-click sample demo: PASS.
-- `npm test`: PASS locally, 32/32.
-- `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test`: PASS,
-  32/32 live.
-- `npm run build`: PASS, including `tsc --noEmit`; `dist/` produced.
-- `npm audit --omit=dev`: PASS, 0 vulnerabilities. No lint script exists.
-- All 31 served build files match live byte for byte.
-- Desktop, 390 px mobile, keyboard-only paths, reduced motion, 200% reflow,
-  link crawl, and Axe serious/critical scans: PASS.
-- Invalid files/projects and recovery, 1/6/100-frame exports, persistence, and
-  demo/real storage isolation: PASS.
-- Live request log: 68/68 same-origin; no uploads, tracking, API, unlock,
-  payment, AI, or authentication calls.
-- Live offline reload and candidate service-worker update activation: PASS.
-- Lighthouse mobile: 97 performance / 100 accessibility / 100 best practices /
-  100 SEO; LCP 1,210 ms, TBT 182.5 ms, CLS 0.00021.
-- No product code was changed during verification.
+## Left to fix
 
-## Finding
+The review records four minor but acceptance-blocking-for-this-round issues:
 
-Low: the one-frame clear confirmation says “Clear 1 frames from this browser?”
-The confirmation and deletion behavior are correct. A future copy-only change
-should use the singular “frame.” This is not release-blocking.
+1. Remove the inaccessible “FRAME STUDY / 03” lettering baked into the hero raster; it contradicts the no-text asset specification.
+2. Replace README “small review surface” / “It sits beside a main editor” with the plain proposed description.
+3. Replace the footer’s undefined “light table” metaphor with the proposed product one-liner.
+4. Replace the README `gifuct-js` disposal-mode implementation detail with actionable GIF-import recovery guidance.
 
-## Reproduce
+After copy/asset repair, rerun:
 
 ```sh
 npm ci
 npm test
 npm run build
 PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test
-node .factory/qa-evidence-6/manual-live.mjs
-node .factory/qa-evidence-6/offline-live.mjs
-node .factory/qa-evidence-6/sw-update.mjs
 ```
-
-Evidence is under `.factory/qa-evidence-6/`. The static PWA has no server-side
-endpoint, so rate-limit/429, backend concurrency, health, and Entra sign-in
-checks are not applicable.
