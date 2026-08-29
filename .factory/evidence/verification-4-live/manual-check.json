@@ -1,0 +1,45 @@
+{
+  "candidate": "228de240c35a0a4c42cfda3a8a0a6ecd8fc6b7fe",
+  "url": "https://onion-next-frame.sociobot.in",
+  "viewport": { "width": 390, "height": 844 },
+  "mobile": {
+    "scrollWidth": 390,
+    "reducedMotionTransition": "0.01ms",
+    "undersizedCoreControls": [
+      { "layer": "previous", "control": "opacity", "width": 324, "height": 32 },
+      { "layer": "current", "control": "opacity", "width": 324, "height": 32 },
+      { "layer": "next", "control": "opacity", "width": 324, "height": 32 }
+    ]
+  },
+  "demoFlow": {
+    "initial": "FRAME 03 / 06",
+    "arrowRight": "FRAME 04 / 06",
+    "shiftArrowRight": "FRAME 06 / 06",
+    "opacityBoundaries": ["0%", "100%"],
+    "reset": "FRAME 03 / 06",
+    "contactSheet": { "name": "onion-next-frame-contact-sheet.png", "bytes": 31064 }
+  },
+  "boundaryFlow": {
+    "oneFrame": "FRAME 01 / 01",
+    "hundredFrameExport": { "buttons": 100, "width": 880, "height": 6356, "bytes": 271562 }
+  },
+  "invalidInput": {
+    "corruptPngMessage": "The source image could not be decoded.",
+    "malformedProjectMessage": "The project file is not valid JSON. Choose an exported project file.",
+    "validGifRecovery": "Loaded 2 frames."
+  },
+  "network": {
+    "requestCount": 74,
+    "origins": ["https://onion-next-frame.sociobot.in"],
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  "pwaUpdate": {
+    "beforeCache": "onion-next-frame-v3",
+    "toast": "An updated frame is ready. Load update",
+    "afterCache": "onion-next-frame-v4",
+    "controller": "activated",
+    "counterAfterUpdate": "FRAME 03 / 06",
+    "errors": []
+  }
+}
