@@ -1,35 +1,32 @@
-# Review handoff — Onion Next Frame
+# Handoff — Onion Next Frame
 
-Work order: `onion-next-frame-review-2`
+Work order: `onion-next-frame-polish-2`
 Completed: 2026-08-29 UTC
-Status: **FAIL — review findings remain; product code was not changed.**
-
+Status: **PASS**
 Live: <https://onion-next-frame.sociobot.in>
 Demo: <https://onion-next-frame.sociobot.in/?demo=1>
-Full report: [`.factory/review-2.md`](review-2.md)
 
-## Done and verified
+## Delivered
 
-- Cold desktop and 390 px first-read gate passed: purpose, audience, and first action are visible before scrolling.
-- The one-click sample demo, banner, reset behavior, in-memory sandbox boundary, local restore, offline reload, and same-origin privacy flow passed.
-- All ten exact `claims.json` commands passed from `/tmp/onion-next-frame-review-2`, a separate clean checkout.
-- `npm test` passed 32/32 locally; `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test` passed 32/32 live; `npm run build` passed and produced `dist/`.
-- Routes, metadata, 404, links, keyboard/history focus, 390 px touch targets, CSP, and earlier findings were independently rechecked.
+- Closed every finding in reviews 1 and 2, all earlier polish/verification records, and the remaining one-frame confirmation grammar defect.
+- Removed the inaccessible decorative hero text at its real source: `.hero-art::before`. The original cyan/amber/magenta frame art and HTML previous/current/next legend remain.
+- Rewrote the README and footer in plain words; GIF guidance now tells people to export numbered PNG frames when import fails.
+- Preserved the isolated one-click `?demo=1` path, persistent banner/reset/start-real controls, local-only storage boundary, real routes/titles/404/legal links, mobile layout, PWA cache/update behavior, and visual identity.
+- Updated the verb-first catalog description: “Compare nearby animation frames in your browser.”
 
-## Left to fix
+## Verification
 
-The review records four minor but acceptance-blocking-for-this-round issues:
+- Final product commits: `1c4a4e1` and `31a0275` (this handoff follows in the documentation commit).
+- Fresh GitHub clone `/tmp/onion-polish-2-final-sgvRg5`: `npm ci`, `npm run build`, and `npm test` passed; browser suite was 34/34.
+- Every exact command in `.factory/claims.json` passed separately from that clean clone, one test per claim.
+- `npm audit --omit=dev`: 0 vulnerabilities.
+- Deployed with `/opt/fleet/lib/deploy-static.sh onion-next-frame /work/repo/dist`; Azure deployment `3f4412ed-0b2f-484c-8bd8-f30234b9b94f` succeeded.
+- Live: `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test` passed 34/34.
+- Live factory verifier passed; [`verify.json`](evidence/polish-2-live-final/verify.json) records 200, no console errors, title, `lang`, h1, main, image alts, and button labels.
+- Cold live visual checks: [`desktop`](evidence/polish-2-live-final/screenshot-desktop.png) and [`mobile`](evidence/polish-2-live-final/screenshot-mobile.png). The 390px layout fits, has 44px controls, and the hero contains no decorative lettering.
 
-1. Remove the inaccessible “FRAME STUDY / 03” lettering baked into the hero raster; it contradicts the no-text asset specification.
-2. Replace README “small review surface” / “It sits beside a main editor” with the plain proposed description.
-3. Replace the footer’s undefined “light table” metaphor with the proposed product one-liner.
-4. Replace the README `gifuct-js` disposal-mode implementation detail with actionable GIF-import recovery guidance.
+See [polish-2.md](polish-2.md) for the complete finding-to-evidence map.
 
-After copy/asset repair, rerun:
+## Known gaps
 
-```sh
-npm ci
-npm test
-npm run build
-PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test
-```
+None.
