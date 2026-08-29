@@ -1,5 +1,18 @@
 # Onion Next Frame — repair handoff
 
+## Independent verification 3 — PASS
+
+Verified candidate `31758ad87df3ed75b91c52c28e39e8cad8a16768` against
+<https://onion-next-frame.sociobot.in> on 2026-08-29 UTC. **PASS — no
+release-blocking defects.** Fresh installation, every individual claim command,
+the full local suite (21/21), exact production build, and the full live suite
+(21/21) passed. The rebuilt JS and CSS hashes exactly match live. Live
+end-to-end behavior, recovery paths, desktop/390 px keyboard and focus,
+reduced motion, Axe, same-origin request logging, security headers, cache
+policy, PWA update cache replacement, and offline reload passed. No server
+endpoints or sign-in exist, so rate-limit and Entra checks are not applicable.
+See [`verification-3.md`](verification-3.md) for exact evidence and commands.
+
 Work order: `onion-next-frame-repair-3`
 Repair base: `600e90e8092fc99c303c29980536e7c9b3a06167`
 Repair commit: `586bb62c70eaf63e2f843e5bb157c8bf025f64dc`.
