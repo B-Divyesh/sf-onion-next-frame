@@ -15,7 +15,12 @@ export function loadImage(dataUrl: string): Promise<HTMLImageElement> {
 }
 
 async function decodePng(file: File): Promise<Frame[]> {
-  const bitmap = await createImageBitmap(file);
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    throw new Error(`${file.name} could not be opened as a PNG. Choose another PNG or export it again from the source editor.`);
+  }
   const canvas = document.createElement('canvas');
   canvas.width = bitmap.width;
   canvas.height = bitmap.height;

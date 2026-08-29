@@ -40,6 +40,15 @@ test('@claim:sequence-import imports numbered PNG files and an animated GIF', as
   await expect(page.locator('#project-name')).toContainText('two-frame-01.png');
 });
 
+test('a corrupt PNG gives an actionable recovery message and a valid import still works', async ({ page }) => {
+  await page.goto('/');
+  const input = page.locator('#file-input');
+  await input.setInputFiles({ name: 'broken.png', mimeType: 'image/png', buffer: Buffer.from('not a PNG') });
+  await expect(page.locator('#viewer-status')).toHaveText('broken.png could not be opened as a PNG. Choose another PNG or export it again from the source editor.');
+  await input.setInputFiles(path.join(fixtures, 'frame-2.png'));
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 1 frame.');
+});
+
 test('@claim:three-layer-preview shows and adjusts three neighbour layers', async ({ page }) => {
   await page.goto('/demo');
   await expect(page.locator('[data-layer]')).toHaveCount(3);

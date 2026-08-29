@@ -1,49 +1,72 @@
-# Verification handoff — Onion Next Frame
+# Repair handoff — Onion Next Frame
 
-Work order: `onion-next-frame-verify-4`
+Work order: `onion-next-frame-repair-4`
 
 Completed: 2026-08-29 UTC
 
-Status: **FAIL — release blocked**
+Status: **PASS locally — deployment verification follows this commit**
 
-Candidate: `228de240c35a0a4c42cfda3a8a0a6ecd8fc6b7fe`
+Base candidate: `228de240c35a0a4c42cfda3a8a0a6ecd8fc6b7fe`
 
 Live: <https://onion-next-frame.sociobot.in>
 
 Demo: <https://onion-next-frame.sociobot.in/?demo=1>
 
-## Result
+## Repaired findings
 
-All ten claim tests pass individually. The complete local and live suites each
-pass 25/25, the exact build passes, the live executable is byte-identical to
-the candidate, privacy and offline behavior pass, and Lighthouse mobile scores
-94 performance / 100 accessibility / 100 best practices / 100 SEO. The prior
-hashed-asset cache problem is fixed.
+- Reproduced the verifier's exact 390×844 failure before editing: Previous,
+  Current, and Next opacity controls measured 324×32 CSS px. All range inputs
+  now have a 44 px minimum height. The accompanying 390 px regression test
+  measures every visible enabled demo link, button, and input, then explicitly
+  asserts all three opacity ranges are at least 44×44.
+- A corrupt `broken.png` previously exposed the browser text “The source image
+  could not be decoded.” PNG decoding now returns: “broken.png could not be
+  opened as a PNG. Choose another PNG or export it again from the source
+  editor.” The regression test then imports a valid PNG to prove recovery.
+- Removed the catch-all Static Web Apps navigation fallback. `/demo`,
+  `/privacy`, and `/terms` explicitly rewrite to the application shell while
+  any unknown document follows the existing `/404.html` response override.
+  The preview server mirrors this deployment behavior. Regression coverage
+  checks both `/definitely-missing` and `/definitely-missing.html` return HTTP
+  404 and show the designed missing-frame page.
+- Bumped the PWA shell cache from `onion-next-frame-v3` to v4 so an existing
+  installation receives this release and its update toast path remains valid.
 
-Release remains blocked because the three layer-opacity sliders are 324×32 CSS
-px at 390×844. The product contract requires every touch target to be at least
-44×44 px, and these sliders are core to the requested independent layer
-controls. The existing touch-target test covers only landing links and buttons,
-not demo inputs.
+The brief, visual system, local-first storage, demo isolation, imports, GIF
+support, exports, keyboard controls, and passing behavior are unchanged.
 
-Additional findings: a corrupt PNG exposes a raw decoder error without a next
-step (medium), and unknown document paths return a soft HTTP 200 missing-page
-view (low).
+## Verification
 
-Full commands, hashes, headers, flow evidence, defects, and reproduction notes
-are in [`.factory/verification-4.md`](verification-4.md). Screenshots, the URL
-verifier result, and fresh Lighthouse JSON are in
-`.factory/evidence/verification-4-live/`.
+- `npm ci`: PASS; 28 packages installed; 0 vulnerabilities.
+- Each of the ten commands in `.factory/claims.json` was run separately with
+  its exact `@claim:` filter and passed 1/1.
+- `npm test`: PASS, 28/28 Chromium integration tests. This covers desktop,
+  390px mobile, keyboard history/frame controls, every required claim, privacy
+  request scope, offline reload, PWA cache v4, touch targets, recovery, real
+  404 behavior, route metadata, CSP, and Axe serious/critical checks on home,
+  demo, privacy, terms, and 404.
+- `npm run build`: PASS; typecheck passes and `dist/index.html` is produced.
+  Output is 35.49 KB JS (12.26 KB gzip) and 18.26 KB CSS (4.70 KB gzip).
+- `npm audit --omit=dev`: PASS; 0 vulnerabilities.
+- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4174/ …`: PASS; 591 ms,
+  zero console/page errors, title/lang/one h1/main/alt/button checks pass.
+- Direct production-preview evidence: opacity inputs are 324×44 px at 390 px;
+  corrupt PNG recovery text is exact; an unknown document responds 404; emitted
+  hashed JS has `Cache-Control: public, max-age=31536000, immutable`.
 
-## Reproduce
+## Run and deploy
 
 ```sh
 npm ci
 npm test
 npm run build
-PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test
+/opt/fleet/lib/deploy-static.sh onion-next-frame dist
 ```
 
-At 390×844, inspect
-`[data-layer] input[data-field="opacity"]`: each live bounding box is 324×32
-px. No product code was modified by verification.
+`dist/` remains the static PWA deployment artifact. The deployment command
+uses the factory's existing Static Web App and custom-domain configuration.
+
+## Known gaps
+
+None locally. The deployed URL must be checked after the static upload for the
+new asset identity, 404 status, headers, and PWA cache v4.

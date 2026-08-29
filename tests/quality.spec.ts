@@ -14,13 +14,19 @@ for (const [route, title] of [
     const errors: string[] = [];
     page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('pageerror', (error) => errors.push(error.message));
-    await page.goto(route);
+    const response = await page.goto(route);
+    if (route === '/not-a-frame') expect(response?.status()).toBe(404);
     await expect(page).toHaveTitle(title);
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('main')).toHaveCount(1);
     const results = await new AxeBuilder({ page: page as never }).analyze();
     expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? ''))).toEqual([]);
-    expect(errors).toEqual([]);
+    // Chromium reports the intentionally non-2xx main document as a console
+    // error. Keep that browser diagnostic separate from application errors.
+    const applicationErrors = route === '/not-a-frame'
+      ? errors.filter((message) => !message.includes('server responded with a status of 404'))
+      : errors;
+    expect(applicationErrors).toEqual([]);
   });
 }
 
@@ -65,6 +71,52 @@ test('every visible landing-page link and button has a 44px touch target at 390p
   }));
 
   expect(undersized).toEqual([]);
+});
+
+test('every enabled demo control, including all layer inputs, has a 44px touch target at 390px', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/demo');
+
+  const undersized = await page.locator('a[href], button:not(:disabled), input:not(:disabled):not(.sr-only)').evaluateAll((elements) =>
+    elements.flatMap((element) => {
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      const isVisible = style.visibility !== 'hidden' && style.display !== 'none' && rect.width > 0 && rect.height > 0;
+      return isVisible && (rect.width < 44 || rect.height < 44)
+        ? [{ tag: element.tagName, name: element.getAttribute('aria-label') ?? element.textContent?.trim(), type: element.getAttribute('type'), width: rect.width, height: rect.height }]
+        : [];
+    })
+  );
+
+  expect(undersized).toEqual([]);
+  const opacityBoxes = await page.locator('[data-layer] input[data-field="opacity"]').evaluateAll((inputs) => inputs.map((input) => {
+    const rect = input.getBoundingClientRect();
+    return { layer: input.closest('[data-layer]')?.getAttribute('data-layer'), width: rect.width, height: rect.height };
+  }));
+  expect(opacityBoxes).toEqual([
+    { layer: 'previous', width: expect.any(Number), height: expect.any(Number) },
+    { layer: 'current', width: expect.any(Number), height: expect.any(Number) },
+    { layer: 'next', width: expect.any(Number), height: expect.any(Number) }
+  ]);
+  expect(opacityBoxes.every(({ width, height }) => width >= 44 && height >= 44)).toBeTruthy();
+});
+
+test('unknown document routes return the designed page with a real HTTP 404', async ({ page, request }) => {
+  for (const path of ['/definitely-missing', '/definitely-missing.html']) {
+    const response = await request.get(path, { headers: { Accept: 'text/html' } });
+    expect(response.status()).toBe(404);
+  }
+  const response = await page.goto('/definitely-missing');
+  expect(response?.status()).toBe(404);
+  await expect(page).toHaveTitle('Missing frame — Onion Next Frame');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('This frame is missing.');
+
+  const deployedConfig = JSON.parse(await readFile('public/staticwebapp.config.json', 'utf8')) as {
+    navigationFallback?: unknown;
+    responseOverrides: { '404': { rewrite: string } };
+  };
+  expect(deployedConfig.navigationFallback).toBeUndefined();
+  expect(deployedConfig.responseOverrides['404'].rewrite).toBe('/404.html');
 });
 
 test('metadata, manifest, and original social image are reachable', async ({ page, request }) => {
@@ -146,5 +198,5 @@ test('service worker installs the current cache generation for updates', async (
   await page.goto('/demo');
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   const cacheNames = await page.evaluate(async () => caches.keys());
-  expect(cacheNames).toContain('onion-next-frame-v3');
+  expect(cacheNames).toContain('onion-next-frame-v4');
 });
