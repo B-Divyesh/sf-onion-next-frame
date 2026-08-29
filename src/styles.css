@@ -448,11 +448,15 @@ kbd { padding: 3px 6px; border: 1px solid var(--line); background: var(--void); 
   .demo-banner > div { width: 100%; justify-content: space-between; }
   .section-grid { grid-template-columns: 28px minmax(0, 1fr); gap: 12px; }
   .section-number { font-size: 10px; }
-  .hero { min-height: auto; padding-top: 48px; grid-template-columns: 28px minmax(0, 1fr); }
+  .hero { min-height: auto; padding-top: 20px; padding-bottom: 36px; grid-template-columns: 28px minmax(0, 1fr); }
+  .hero .eyebrow { margin-bottom: 10px; }
+  .hero h1 { margin-bottom: 14px; font-size: clamp(1.9rem, 8.2vw, 2.15rem); line-height: 1.08; }
+  .hero .lede { margin-bottom: 16px; font-size: 17px; line-height: 1.4; }
   .hero-art { grid-column: 1 / -1; width: calc(100% + 40px); margin: 24px -20px 0; }
   .hero-art figcaption { padding-inline: 8%; }
-  .hero-actions { align-items: flex-start; flex-direction: column; gap: 8px; }
-  .hero-actions .key { width: 100%; }
+  .hero-actions { align-items: flex-start; flex-direction: column; gap: 8px; margin: 16px 0 10px; }
+  .hero-actions .key { flex: 0 0 auto; width: 100%; }
+  .fact-list { margin-top: 16px; padding-top: 12px; gap: 4px; }
   .demo-compact { width: calc(100% - 24px); padding: 12px 0 8px; }
   .demo-compact h1 { max-width: 16ch; margin-bottom: 8px; font-size: clamp(1.65rem, 7.2vw, 2rem); }
   .demo-compact .lede { font-size: 17px; line-height: 1.35; }

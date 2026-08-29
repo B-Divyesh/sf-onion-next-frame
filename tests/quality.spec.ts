@@ -146,6 +146,18 @@ test('the desktop first screen keeps all three product facts beside the primary 
   expect(facts!.y + facts!.height).toBeLessThanOrEqual(900);
 });
 
+test('the mobile first screen keeps all three product facts readable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const facts = await page.locator('.fact-list').boundingBox();
+  expect(facts).not.toBeNull();
+  expect(facts!.y).toBeGreaterThanOrEqual(0);
+  expect(facts!.y + facts!.height).toBeLessThanOrEqual(844);
+  await expect(page.locator('.fact-list')).toContainText('Free to use');
+  await expect(page.locator('.fact-list')).toContainText('Works offline after the first visit');
+  await expect(page.locator('.fact-list')).toContainText('Images stay on this device');
+});
+
 test('every visible landing-page link and button has a 44px touch target at 390px', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
