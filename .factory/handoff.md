@@ -1,3 +1,13 @@
+# Handoff — independent verification 9
+
+**Result: PASS** for candidate `da7db7133b686ec36cac2757957b60cb1f6e1c81` at <https://onion-next-frame.sociobot.in> (verified 2026-08-29 UTC).
+
+The verifier made no product-code changes. `npm ci`, every one of the 15 exact claim commands in `.factory/claims.json`, the complete local Playwright suite, the complete deployed Playwright suite, and `npm run build` passed. The deployed HTML, JS, CSS, manifest, and service-worker hashes match a fresh build of the candidate. Direct live checks confirmed the plain-language one-click demo, PNG contact-sheet export, invalid-input recovery, same-origin-only request log, keyboard/focus behavior, 390px layout, offline reload, and an old-to-v8 service-worker update.
+
+No critical, high, medium, or low release defects remain. See [verification-9.md](verification-9.md) for exact evidence, limits, and the Lighthouse screenshot-collection tool issue.
+
+---
+
 # Handoff — perfection-loop polish 3
 
 - Work order: `onion-next-frame-polish-3`
