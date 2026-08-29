@@ -52,7 +52,7 @@ Upload `dist/` to the static host. `staticwebapp.config.json` provides the histo
 
 ## Browser notes
 
-If PNG import fails, update your browser or use a current desktop browser. If a GIF fails to import, export its frames as numbered PNG files. Very large sequences can exceed this browser's storage limit; original source files remain the backup.
+If PNG import fails, update your browser or use a current desktop browser. If a GIF fails to import, export its frames as numbered PNG files. Very large sequences can exceed this browser's storage limit. Keep the original source files as a backup.
 
 ## Product records
 

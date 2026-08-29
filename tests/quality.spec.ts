@@ -106,6 +106,30 @@ test('the hero has no decorative lettering and keeps its useful description in H
   await expect(page.locator('.hero-art figcaption')).toHaveText(/PREVIOUS[\s\S]*CURRENT[\s\S]*NEXT/);
 });
 
+test('review-three copy uses one plain name for each task and storage boundary', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('Your frame comparison appears here.')).toBeVisible();
+  await expect(page.getByText('Adjust the frame layers')).toBeVisible();
+  await expect(page.getByText('Export a contact sheet')).toBeVisible();
+  await expect(page.locator('.console-top')).toHaveText(/LAYERS[\s\S]*COLOR \/ OPACITY/);
+  await expect(page.locator('main')).not.toContainText('Your onion preview appears here.');
+  await expect(page.locator('main')).not.toContainText('Tune each neighbour');
+  await expect(page.locator('main')).not.toContainText('Export the sheet');
+  await expect(page.locator('main')).not.toContainText('RGB / ALPHA');
+
+  const readme = await readFile('README.md', 'utf8');
+  for (const copy of [
+    'Imports numbered PNG files in number order and imports animated GIF frames.',
+    'Real projects stay in this browser.',
+    'The demo banner remains visible while demo mode is active.',
+    'Open `/?demo=1` to load the sample.',
+    "Very large sequences can exceed this browser's storage limit."
+  ]) expect(readme).toContain(copy);
+  for (const oldCopy of ['naturally sorted', 'Real projects use IndexedDB.', 'The cyan banner', 'seeded path', "IndexedDB quota"]) {
+    expect(readme).not.toContain(oldCopy);
+  }
+});
+
 test('the workbench fits a 390px phone without horizontal scrolling', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/demo');
