@@ -199,6 +199,19 @@ test('a one-frame project uses singular restore copy', async ({ page }) => {
   await expect(page.locator('#viewer-status')).toHaveText('Restored 1 saved frame from this browser.');
 });
 
+test('a one-frame project uses singular clear confirmation copy', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#file-input').setInputFiles(path.join(fixtures, 'frame-2.png'));
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 1 frame.');
+  page.once('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('confirm');
+    expect(dialog.message()).toBe('Clear 1 frame from this browser?');
+    await dialog.dismiss();
+  });
+  await page.getByRole('button', { name: 'Clear sequence' }).click();
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 01 / 01');
+});
+
 test('@claim:free-use has no payment or account gate', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.fact-list li').filter({ hasText: 'Free to use' })).toBeVisible();

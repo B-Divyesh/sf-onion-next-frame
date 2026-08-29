@@ -2,7 +2,7 @@
 
 Compare a pixel animation with its previous and next frames.
 
-Onion Next Frame is a small review surface for solo pixel artists and tiny game teams. It sits beside a main editor. It does not add painting, hosting, collaboration, or generated frames.
+Onion Next Frame helps solo pixel artists and small game teams compare nearby animation frames beside their main editor. It does not add painting, hosting, collaboration, or generated frames.
 
 Live site: <https://onion-next-frame.sociobot.in>
 
@@ -52,7 +52,7 @@ Upload `dist/` to the static host. `staticwebapp.config.json` provides the histo
 
 ## Browser notes
 
-If PNG import fails, update your browser or use a current desktop browser. Animated GIF disposal modes are decoded in-browser with `gifuct-js`. Very large sequences can reach the browser's IndexedDB quota; original source files remain the backup.
+If PNG import fails, update your browser or use a current desktop browser. If a GIF fails to import, export its frames as numbered PNG files. Very large sequences can reach the browser's IndexedDB quota; original source files remain the backup.
 
 ## Product records
 

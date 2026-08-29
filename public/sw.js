@@ -1,5 +1,5 @@
 // Bump when the precached shell changes so installed copies replace old assets.
-const CACHE = 'onion-next-frame-v5';
+const CACHE = 'onion-next-frame-v6';
 const SHELL = [
   '/',
   '/demo',

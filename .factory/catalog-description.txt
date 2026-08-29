@@ -1,1 +1,1 @@
-Compare a pixel animation with its previous and next frames.
+Compare nearby animation frames in your browser.

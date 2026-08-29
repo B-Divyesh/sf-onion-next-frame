@@ -57,7 +57,7 @@ Audit date: 2026-08-29. Scope: every visible landing-page string plus the light 
 | The app stores your latest real sequence in this browser. | 10 | Pass |
 | Demo frames use memory only. | 5 | Pass |
 | Read the privacy details | 4 | Pass |
-| A local light table for animation frames. | 7 | Pass |
+| A local tool for comparing animation frames. | 7 | Pass |
 | Terms | 1 | Pass |
 | Built by Param Factory | 4 | Pass |
 | v1.0.0 · Generated artwork disclosed in the design notes. | 8 | Pass |
@@ -100,6 +100,7 @@ The first screen states the job, names pixel artists, and puts the sample result
 | Saved frames could not be opened. | 6 | Pass |
 | You can import the sequence again. | 6 | Pass |
 | Restored one saved frame from this browser. | 8 | Pass |
+| Clear 1 frame from this browser? | 6 | Pass |
 
 File-specific errors add the failed file name before the audited instruction. Counts remain below the limit for supported names in the shipped fixtures.
 
@@ -122,6 +123,12 @@ File-specific errors add the failed file name before the audited instruction. Co
 - “Six original sample frames load immediately.” is covered by `sample-six-frame-demo`.
 - The compatibility note is actionable guidance, not a browser-support promise.
 - The test command describes the suite without a stale test count.
+- The README introduction says who the tool is for and what it compares without using “review surface.”
+- The GIF note gives a recovery step instead of naming an implementation detail.
+
+## Raster hero check
+
+The checked-in source and responsive WebP derivatives were visually inspected on 2026-08-29. They contain only the three original cyan, amber, and magenta runner poses and no baked lettering. The useful previous/current/next legend remains HTML text in the figure caption.
 
 ## Catalog description
 

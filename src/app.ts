@@ -49,7 +49,7 @@ function shell(content: string, demo = false): string {
     </header>
     <main id="main">${content}</main>
     <footer class="site-footer">
-      <p><span class="footer-mark" aria-hidden="true">◫ ◧ ◫</span> A local light table for animation frames.</p>
+      <p><span class="footer-mark" aria-hidden="true">◫ ◧ ◫</span> A local tool for comparing animation frames.</p>
       <nav aria-label="Footer navigation"><a href="/privacy" data-nav>Privacy</a><a href="/terms" data-nav>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory <span class="sr-only">(external site)</span>↗</a></nav>
       <p>v1.0.0 · Generated artwork disclosed in the design notes.</p>
     </footer>
@@ -571,7 +571,8 @@ async function initializeTool(demo: boolean): Promise<() => void> {
   importProjectButton.addEventListener('click', () => projectInput.click(), { signal });
   projectInput.addEventListener('change', () => projectInput.files?.[0] && void importProject(projectInput.files[0]), { signal });
   clearButton.addEventListener('click', async () => {
-    if (!window.confirm(`Clear ${frames.length} frames from this browser?`)) return;
+    const frameNoun = frames.length === 1 ? 'frame' : 'frames';
+    if (!window.confirm(`Clear ${frames.length} ${frameNoun} from this browser?`)) return;
     frames = [];
     imageCache.clear();
     current = 0;

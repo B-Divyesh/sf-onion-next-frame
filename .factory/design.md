@@ -46,6 +46,7 @@ Frame changes use a 180 ms stepped fade and a moving scan edge. No decoration lo
 - Prompt: “Wide editorial pixel-art illustration for a tiny animation review utility, side view of an original small caped creature taking three running poses on a dark navy phosphor light table, central current pose in warm cream and amber, previous pose as translucent cyan pixel echo, next pose as translucent magenta pixel echo, chunky 16-bit demoscene pixels, subtle ordered dithering, crisp hard edges, asymmetric composition with empty dark space at left, limited palette #090d12 #55e6df #ff6fae #ffd166 #f5f3e8, no text, no letters, no watermark, no logo, no real people, no existing characters, no gradients, no photorealism.”
 - Generated with the factory image model (`factory-image`) on 2026-08-28. The chosen source and prompt sidecar live in `assets/src/`. Generated imagery is original to this product.
 - Runtime derivatives: responsive WebP hero crops at 640 and 1200 pixels, each under 300 KB; a composed 1200×630 Open Graph image; hand-authored SVG favicon and PWA icon source.
+- Review repair, 2026-08-29: the source PNG and all shipped WebP derivatives were rechecked at native resolution. They show only the three runner poses and contain no lettering; the useful Previous / Current / Next labels remain semantic HTML beside the image.
 
 ## Page rhythm
 
