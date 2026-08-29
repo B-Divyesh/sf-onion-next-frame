@@ -1,0 +1,11 @@
+LIVE COLD FINDING CHECK: PASS
+Copy additions and removals: PASS
+One-click /?demo=1 path: PASS
+Six sample frames: PASS
+Direct-demo IndexedDB isolation: PASS
+Persistent banner, Reset demo, and Start for real: PASS
+390 px horizontal overflow: PASS
+Route titles and focus: PASS
+404 return path: PASS
+Privacy, Terms, demo, manifest, robots, and sitemap responses: PASS
+Console errors: 0
