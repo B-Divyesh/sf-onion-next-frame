@@ -1,33 +1,34 @@
 # Handoff — Onion Next Frame
 
-Work order: `onion-next-frame-verify-7`
+Work order: `onion-next-frame-repair-6`
 Completed: 2026-08-29 UTC
-Status: **FAIL**
-Requested candidate: `59a3f08103317357160047c6efbb28bc96c434d1`
-Available checkout and remote `main`: `59a3f077a72799d641a16fb34f3e75cdc8283d9c`
+Status: **PASS**
+Repair artifact: `01632e9469cbd1352e3eb4a13a36a0b5db2778f1` (`fix: cover all published interaction claims`)
 Live: <https://onion-next-frame.sociobot.in>
 Demo: <https://onion-next-frame.sociobot.in/?demo=1>
 
-## Verification outcome
+## Release-blocker repair
 
-- The requested candidate cannot be resolved locally or fetched from GitHub (`upload-pack: not our ref`). Candidate testing and live/candidate identity are therefore impossible.
-- The live deployment is byte-identical across all 31 served files to the available base `59a3f077...`; the previously reported deployment-only failure is absent for that build.
-- After `npm ci`, every exact claim command passed (10/10), the full local and live suites passed (34/34 each), TypeScript passed, the production build created `dist/`, and the production audit found no vulnerabilities.
-- Independent desktop/mobile, normal, 100-frame, one-frame, invalid-input, recovery, keyboard, export/import, privacy, offline, service-worker update, caching, headers, accessibility, and performance checks otherwise passed.
-- Release remains blocked because `.factory/claims.json` omits visitor-facing drag/drop, keyboard/`E`, and Start-for-real promises and their required tagged claim tests.
+- Fixed the incomplete claims inventory without changing the researched product behavior. `.factory/claims.json` now declares the three visitor-visible promises the independent verifier found missing:
+  - dropping both PNG and GIF files into the preview;
+  - Arrow navigation, Shift jumps to both ends, and `E` export;
+  - **Start for real** discarding demo state and returning to real saved work.
+- Added exactly one tagged Playwright sandbox regression for each new claim. The drag/drop test dispatches real PNG and GIF `File` objects to the preview; the keyboard test proves both Shift endpoints and verifies the downloaded PNG; the Start-for-real test saves real work, enters the demo, then proves the real project returns.
+- The original nominated SHA `59a3f08103317357160047c6efbb28bc96c434d1` is still not a Git object. The repair is instead a new, resolvable, pushed artifact at `01632e9...`; `origin/main` resolved to that SHA before the documentation handoff commit. This provides the immutable source and deployed-build identity the unavailable candidate could not provide.
 
-## Quality snapshot
+## Verification
 
-- Lighthouse mobile: Performance 90, Accessibility 100, Best Practices 100, SEO 100; LCP 1.230 s, CLS 0.000024, 117,423 bytes transferred.
-- Bundle: 37,270-byte JS and 18,125-byte CSS; emitted fonts 114,936 bytes; mobile hero 12,814 bytes.
-- Playwright request log: 48/48 requests same-origin, no failed request, console error, or page error.
-- Axe: zero serious/critical findings on independently checked desktop and 390 px mobile screens.
-- Offline reload and simulated cache v6→v7 update: PASS.
+- Clean install: `npm ci` installed 28 packages with 0 audit findings.
+- Claims: every literal command listed in `.factory/claims.json` passed separately, **13/13**. The manifest has 13 entries and exactly one `@claim:<id>` test for each.
+- Type/build: `npm run build` passed (`tsc --noEmit` + Vite) and produced `dist/index.html`; no separate lint script is defined by this project.
+- Full browser suite: local production preview **37/37**; live production site **37/37**. This covers desktop, 390px mobile/reflow and touch targets, keyboard navigation, route focus/history, import/export, privacy request capture, offline reload, and all tagged claims.
+- Accessibility: Playwright Axe found zero serious or critical findings across home, query demo, `/demo`, privacy, terms, and 404. The factory URL verifier found one title, `lang=en`, one h1, main, no missing image alt, no unnamed buttons, and no browser console/page errors on both local and live builds. See [`verify-local`](qa-evidence-8/verify-local/verify.json) and [`verify-live`](qa-evidence-8/verify-live/verify.json).
+- Privacy and response policy: the privacy claim test passed locally and live with all recorded application requests same-origin; no accounts, password fields, or embeds appear. Live headers include CSP restricted to self/data/blob as needed, `frame-ancestors 'none'`, HSTS, strict-origin referrer policy, `nosniff`, and disabled camera/microphone/geolocation.
+- PWA: offline reload passed; the current v6→v7 service-worker update simulation showed the update toast, cache replacement, retained demo frame 03/06, and no errors (`.factory/qa-evidence-7/sw-update.json`).
+- Performance: fresh mobile Lighthouse on the local production build scored Performance **100**, Accessibility **100**, Best Practices **100**, SEO **100**; FCP/LCP 1.363 s and CLS 0.000024. Report: [`lighthouse-local.json`](qa-evidence-8/lighthouse-local.json). Build output remains 37,270-byte raw JS (12.78 KB gzip), 18,125-byte CSS (4.65 KB gzip), and 114,936-byte emitted fonts.
+- Deployment: `/opt/fleet/lib/deploy-static.sh onion-next-frame /work/repo/dist` completed successfully as Azure deployment `79b71a5c-bea2-41e5-8765-9dfcdaee843c`.
+- Live identity: after deployment, SHA-256 compared all 31 served files from `dist/` with `https://onion-next-frame.sociobot.in/`: **31/31 matched, 0 mismatches**. The source commit and remote `main` were both `01632e9469cbd1352e3eb4a13a36a0b5db2778f1` at comparison time.
 
-## Required next steps
+## Known gaps
 
-1. Publish the exact requested candidate commit, or issue a corrected immutable SHA and rerun independent verification against it.
-2. Add claim entries and exactly one tagged sandbox test each for drag/drop, the documented keyboard shortcuts (including Shift and `E`), and Start for real; alternatively remove those promises.
-3. Rerun all claim commands, the full local/live suite, build comparison, and deployment identity check from the corrected candidate.
-
-Full evidence and defect detail: [verification-7.md](verification-7.md) and `.factory/qa-evidence-7/`.
+None in the shipped product. The invalid historical candidate SHA remains unavailable, but the deployed repair artifact above is pushed, resolvable, and byte-for-byte verified.
