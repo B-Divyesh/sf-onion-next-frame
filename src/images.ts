@@ -1,4 +1,5 @@
 import { decompressFrames, parseGIF } from 'gifuct-js';
+import type { ParsedFrame, ParsedGif } from 'gifuct-js';
 import type { Frame } from './types';
 
 function canvasDataUrl(canvas: HTMLCanvasElement): string {
@@ -33,9 +34,17 @@ async function decodePng(file: File): Promise<Frame[]> {
 }
 
 async function decodeGif(file: File): Promise<Frame[]> {
-  const parsed = parseGIF(await file.arrayBuffer());
-  const decoded = decompressFrames(parsed, true);
-  if (!decoded.length) throw new Error(`${file.name} has no readable GIF frames.`);
+  let parsed: ParsedGif;
+  let decoded: ParsedFrame[];
+  try {
+    parsed = parseGIF(await file.arrayBuffer());
+    decoded = decompressFrames(parsed, true);
+  } catch {
+    throw new Error(`${file.name} could not be opened as an animated GIF. Choose another GIF or export it again from the source editor.`);
+  }
+  if (!decoded.length) {
+    throw new Error(`${file.name} has no readable GIF frames. Choose another GIF or export it again from the source editor.`);
+  }
 
   const width = parsed.lsd.width;
   const height = parsed.lsd.height;

@@ -194,9 +194,33 @@ test('hashed production assets have long-lived immutable caching', async ({ page
   expect(assetRoute?.headers?.['Cache-Control']).toBe('public, max-age=31536000, immutable');
 });
 
+test('unversioned product images revalidate instead of being cached as immutable', async ({ request }) => {
+  const imagePaths = [
+    '/assets/hero-640.webp',
+    '/assets/hero-1200.webp',
+    '/assets/onion-next-frame-og.webp'
+  ];
+  for (const imagePath of imagePaths) {
+    const response = await request.get(imagePath);
+    expect(response.ok()).toBeTruthy();
+    expect(response.headers()['cache-control']).toBe('public, max-age=0, must-revalidate');
+  }
+
+  const deployedConfig = JSON.parse(await readFile('public/staticwebapp.config.json', 'utf8')) as {
+    routes: Array<{ route: string; headers?: Record<string, string> }>;
+  };
+  const immutableIndex = deployedConfig.routes.findIndex((route) => route.route === '/assets/*');
+  for (const imagePath of imagePaths) {
+    const routeIndex = deployedConfig.routes.findIndex((route) => route.route === imagePath);
+    expect(routeIndex).toBeGreaterThanOrEqual(0);
+    expect(routeIndex).toBeLessThan(immutableIndex);
+    expect(deployedConfig.routes[routeIndex].headers?.['Cache-Control']).toBe('public, max-age=0, must-revalidate');
+  }
+});
+
 test('service worker installs the current cache generation for updates', async ({ page }) => {
   await page.goto('/demo');
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   const cacheNames = await page.evaluate(async () => caches.keys());
-  expect(cacheNames).toContain('onion-next-frame-v4');
+  expect(cacheNames).toContain('onion-next-frame-v5');
 });

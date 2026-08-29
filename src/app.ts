@@ -199,6 +199,87 @@ function copySettings(settings: ViewerSettings = defaults): ViewerSettings {
   return structuredClone(settings);
 }
 
+const invalidProjectMessage = 'This is not an Onion Next Frame project. Choose a project exported by this app.';
+const invalidFramesMessage = 'The project has an unreadable frame. Choose another project file or export it again from Onion Next Frame.';
+const invalidSettingsMessage = 'The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function validateLayerSettings(value: unknown): LayerSettings | undefined {
+  if (!isRecord(value)) return;
+  const { visible, opacity, tint, tinted } = value;
+  if (
+    typeof visible !== 'boolean'
+    || typeof opacity !== 'number'
+    || !Number.isFinite(opacity)
+    || opacity < 0
+    || opacity > 1
+    || typeof tint !== 'string'
+    || !/^#[0-9a-f]{6}$/i.test(tint)
+    || typeof tinted !== 'boolean'
+  ) return;
+  return { visible, opacity, tint, tinted };
+}
+
+function validateProject(value: unknown): SavedProject {
+  if (!isRecord(value)) throw new Error(invalidProjectMessage);
+  const { id, name, savedAt, current, frames: rawFrames, settings: rawSettings } = value;
+  if (
+    id !== 'latest'
+    || typeof name !== 'string'
+    || !name.trim()
+    || typeof savedAt !== 'number'
+    || !Number.isFinite(savedAt)
+    || savedAt < 0
+    || typeof current !== 'number'
+    || !Number.isInteger(current)
+  ) throw new Error(invalidProjectMessage);
+  if (!Array.isArray(rawFrames) || !rawFrames.length) throw new Error(invalidProjectMessage);
+
+  const frames = rawFrames.map((value) => {
+    if (!isRecord(value)) throw new Error(invalidFramesMessage);
+    const { name: frameName, dataUrl, width, height } = value;
+    if (
+      typeof frameName !== 'string'
+      || !frameName.trim()
+      || typeof dataUrl !== 'string'
+      || !dataUrl.startsWith('data:image/png')
+      || typeof width !== 'number'
+      || !Number.isSafeInteger(width)
+      || width <= 0
+      || typeof height !== 'number'
+      || !Number.isSafeInteger(height)
+      || height <= 0
+    ) throw new Error(invalidFramesMessage);
+    return { name: frameName, dataUrl, width, height };
+  });
+  if (current < 0 || current >= frames.length) throw new Error(invalidProjectMessage);
+  if (!isRecord(rawSettings)) throw new Error(invalidSettingsMessage);
+
+  const previous = validateLayerSettings(rawSettings.previous);
+  const currentLayer = validateLayerSettings(rawSettings.current);
+  const next = validateLayerSettings(rawSettings.next);
+  if (!previous || !currentLayer || !next) throw new Error(invalidSettingsMessage);
+
+  return {
+    id: 'latest',
+    name,
+    savedAt,
+    current,
+    frames,
+    settings: { previous, current: currentLayer, next }
+  };
+}
+
+function validateProjectEnvelope(value: unknown): SavedProject {
+  if (!isRecord(value) || value.format !== 'onion-next-frame' || value.version !== 1) {
+    throw new Error(invalidProjectMessage);
+  }
+  return validateProject(value.project);
+}
+
 async function initializeTool(demo: boolean): Promise<() => void> {
   const controller = new AbortController();
   const { signal } = controller;
@@ -448,19 +529,26 @@ async function initializeTool(demo: boolean): Promise<() => void> {
 
   async function importProject(file: File): Promise<void> {
     try {
-      const parsed = JSON.parse(await file.text()) as { format?: string; version?: number; project?: SavedProject };
-      const imported = parsed.project;
-      if (parsed.format !== 'onion-next-frame' || parsed.version !== 1 || !imported || !Array.isArray(imported.frames) || !imported.frames.length) {
-        throw new Error('This is not an Onion Next Frame project. Choose an exported project JSON file.');
+      const imported = validateProjectEnvelope(JSON.parse(await file.text()) as unknown);
+      const importedImages = new Map<string, Promise<HTMLImageElement>>();
+      for (const frame of imported.frames) {
+        if (!importedImages.has(frame.dataUrl)) importedImages.set(frame.dataUrl, loadImage(frame.dataUrl));
       }
-      if (imported.frames.some((frame) => !frame.dataUrl?.startsWith('data:image/png') || !frame.width || !frame.height)) {
-        throw new Error('The project has an unreadable frame. Export it again from Onion Next Frame.');
+      try {
+        await Promise.all(imported.frames.map(async (frame) => {
+          const image = await importedImages.get(frame.dataUrl)!;
+          if (image.naturalWidth !== frame.width || image.naturalHeight !== frame.height) throw new Error(invalidFramesMessage);
+        }));
+      } catch {
+        throw new Error(invalidFramesMessage);
       }
+
       frames = imported.frames;
       imageCache.clear();
-      current = Math.max(0, Math.min(imported.current ?? 0, frames.length - 1));
-      projectName = imported.name || file.name;
-      settings = imported.settings ? copySettings(imported.settings) : copySettings();
+      importedImages.forEach((image, dataUrl) => imageCache.set(dataUrl, image));
+      current = imported.current;
+      projectName = imported.name;
+      settings = imported.settings;
       syncControlInputs();
       updateUi(`Imported a project with ${frames.length} frames.`);
       scheduleSave();
@@ -561,12 +649,13 @@ async function initializeTool(demo: boolean): Promise<() => void> {
     try {
       const saved = await loadProject();
       if (saved?.frames.length) {
-        frames = saved.frames;
-        settings = saved.settings;
-        current = Math.min(saved.current, frames.length - 1);
-        projectName = saved.name;
+        const restored = validateProject(saved);
+        frames = restored.frames;
+        settings = restored.settings;
+        current = restored.current;
+        projectName = restored.name;
         syncControlInputs();
-        updateUi(`Restored ${frames.length} saved frames from this browser.`);
+        updateUi(`Restored ${frames.length} saved frame${frames.length === 1 ? '' : 's'} from this browser.`);
       }
     } catch {
       announce('Saved frames could not be opened. You can import the sequence again.');

@@ -49,6 +49,15 @@ test('a corrupt PNG gives an actionable recovery message and a valid import stil
   await expect(page.locator('#viewer-status')).toHaveText('Loaded 1 frame.');
 });
 
+test('a corrupt GIF gives an actionable recovery message and a valid import still works', async ({ page }) => {
+  await page.goto('/');
+  const input = page.locator('#file-input');
+  await input.setInputFiles({ name: 'broken.gif', mimeType: 'image/gif', buffer: Buffer.from('not a GIF') });
+  await expect(page.locator('#viewer-status')).toHaveText('broken.gif has no readable GIF frames. Choose another GIF or export it again from the source editor.');
+  await input.setInputFiles(path.join(fixtures, 'two-frame.gif'));
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 2 frames.');
+});
+
 test('@claim:three-layer-preview shows and adjusts three neighbour layers', async ({ page }) => {
   await page.goto('/demo');
   await expect(page.locator('[data-layer]')).toHaveCount(3);
@@ -95,6 +104,51 @@ test('@claim:project-transfer exports and imports a project JSON file', async ({
   await expect(page.locator('#viewer-status')).toHaveText('Imported a project with 6 frames.');
 });
 
+test('invalid project settings are rejected atomically and the current workbench stays usable', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  await page.goto('/demo');
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export project' }).click();
+  const download = await downloadPromise;
+  const stream = await download.createReadStream();
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  const validBytes = Buffer.concat(chunks);
+  const valid = JSON.parse(validBytes.toString());
+  const invalidCases = [
+    { name: 'missing-settings.json', change: (project: Record<string, unknown>) => { delete project.settings; } },
+    { name: 'malformed-settings.json', change: (project: Record<string, any>) => { project.settings.current.visible = 'yes'; } },
+    { name: 'out-of-range-settings.json', change: (project: Record<string, any>) => { project.settings.next.opacity = 1.2; } }
+  ];
+
+  for (const invalidCase of invalidCases) {
+    const payload = structuredClone(valid);
+    invalidCase.change(payload.project);
+    await page.locator('#project-input').setInputFiles({
+      name: invalidCase.name,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(payload))
+    });
+    await expect(page.locator('#viewer-status')).toHaveText('The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.');
+    await expect(page.locator('#current-counter')).toHaveText('FRAME 03 / 06');
+    await expect(page.locator('#frame-strip button')).toHaveCount(6);
+    await expect(page.locator('#project-name')).toHaveText('Moth run cycle — sample');
+  }
+
+  await page.locator('[data-layer="current"] [data-field="opacity"]').evaluate((input: HTMLInputElement) => {
+    input.value = '50';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await expect(page.locator('[data-layer="current"] [data-output="opacity"]')).toHaveText('50%');
+  await page.getByRole('button', { name: 'Show next frame' }).click();
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 04 / 06');
+  await page.locator('#project-input').setInputFiles({ name: 'valid-project.json', mimeType: 'application/json', buffer: validBytes });
+  await expect(page.locator('#viewer-status')).toHaveText('Imported a project with 6 frames.');
+  expect(pageErrors).toEqual([]);
+});
+
 test('@claim:privacy-local keeps artwork requests on the same origin', async ({ page }) => {
   const requests: string[] = [];
   page.on('request', (request) => requests.push(request.url()));
@@ -134,6 +188,15 @@ test('@claim:local-restore restores the latest real sequence after reload', asyn
   await page.reload();
   await expect(page.locator('#viewer-status')).toHaveText('Restored 2 saved frames from this browser.');
   await expect(page.locator('#current-counter')).toHaveText('FRAME 02 / 02');
+});
+
+test('a one-frame project uses singular restore copy', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#file-input').setInputFiles(path.join(fixtures, 'frame-2.png'));
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 1 frame.');
+  await page.waitForTimeout(300);
+  await page.reload();
+  await expect(page.locator('#viewer-status')).toHaveText('Restored 1 saved frame from this browser.');
 });
 
 test('@claim:free-use has no payment or account gate', async ({ page }) => {
