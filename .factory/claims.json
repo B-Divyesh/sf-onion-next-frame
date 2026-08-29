@@ -21,6 +21,13 @@
     "sandbox": "fresh browser context; import out-of-order PNG fixtures and a two-frame GIF fixture"
   },
   {
+    "id": "drag-drop-import",
+    "claim": "Drops PNG or GIF files into the preview to import them",
+    "where": "preview drop cue and researched brief",
+    "test": "npm test -- --grep @claim:drag-drop-import",
+    "sandbox": "fresh browser context; dispatch a real PNG File through the preview drop target and assert it becomes the loaded sequence"
+  },
+  {
     "id": "three-layer-preview",
     "claim": "Shows previous, current, and next frames with independent layer controls",
     "where": "viewer and how it works, README",
@@ -33,6 +40,13 @@
     "where": "export button, how it works, README",
     "test": "npm test -- --grep @claim:contact-sheet",
     "sandbox": "demo data; download export, verify PNG signature, size, name, and six-frame completion status"
+  },
+  {
+    "id": "keyboard-shortcuts",
+    "claim": "Left and right arrows change frames, Shift jumps to either end, and E exports the contact sheet",
+    "where": "layer key labels, export key label, keyboard note, design notes",
+    "test": "npm test -- --grep @claim:keyboard-shortcuts",
+    "sandbox": "demo data with focus outside controls; exercise both Shift-arrow endpoints and E, then verify the contact-sheet download"
   },
   {
     "id": "project-transfer",
@@ -61,6 +75,13 @@
     "where": "privacy page, README",
     "test": "npm test -- --grep @claim:local-restore",
     "sandbox": "fresh browser context; import two PNG files, wait for IndexedDB, reload, and assert both frames return"
+  },
+  {
+    "id": "start-for-real",
+    "claim": "Start for real discards the demo and returns to the empty or previously saved real project",
+    "where": "demo banner, README, demo documentation",
+    "test": "npm test -- --grep @claim:start-for-real",
+    "sandbox": "fresh browser context; save a real sequence, enter the demo, choose Start for real, and assert the saved real sequence returns instead of the sample"
   },
   {
     "id": "free-use",

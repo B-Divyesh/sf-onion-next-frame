@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const fixtures = path.join(process.cwd(), 'tests', 'fixtures');
@@ -38,6 +39,29 @@ test('@claim:sequence-import imports numbered PNG files and an animated GIF', as
   await input.setInputFiles(path.join(fixtures, 'two-frame.gif'));
   await expect(page.locator('#viewer-status')).toHaveText('Loaded 2 frames.');
   await expect(page.locator('#project-name')).toContainText('two-frame-01.png');
+});
+
+test('@claim:drag-drop-import drops PNG and GIF files into the preview to import them', async ({ page }) => {
+  await page.goto('/');
+  const png = await readFile(path.join(fixtures, 'frame-2.png'));
+  await page.locator('#drop-zone').evaluate((dropZone, bytes) => {
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([new Uint8Array(bytes)], 'dropped-frame-2.png', { type: 'image/png' }));
+    dropZone.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: transfer }));
+  }, [...png]);
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 1 frame.');
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 01 / 01');
+  await expect(page.locator('#project-name')).toHaveText('dropped-frame-2.png');
+
+  const gif = await readFile(path.join(fixtures, 'two-frame.gif'));
+  await page.locator('#drop-zone').evaluate((dropZone, bytes) => {
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([new Uint8Array(bytes)], 'dropped-run.gif', { type: 'image/gif' }));
+    dropZone.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: transfer }));
+  }, [...gif]);
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 2 frames.');
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 02 / 02');
+  await expect(page.locator('#project-name')).toContainText('dropped-run-01.png');
 });
 
 test('a corrupt PNG gives an actionable recovery message and a valid import still works', async ({ page }) => {
@@ -84,6 +108,22 @@ test('@claim:contact-sheet exports every frame as one PNG', async ({ page }) => 
   const file = Buffer.concat(chunks);
   expect(file.subarray(1, 4).toString()).toBe('PNG');
   expect(file.byteLength).toBeGreaterThan(1_000);
+  await expect(page.locator('#viewer-status')).toHaveText('Exported a contact sheet with 6 frames.');
+});
+
+test('@claim:keyboard-shortcuts changes frames, jumps to both ends, and exports with E', async ({ page }) => {
+  await page.goto('/demo');
+  await page.locator('main').click({ position: { x: 2, y: 2 } });
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 04 / 06');
+  await page.keyboard.press('Shift+ArrowRight');
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 06 / 06');
+  await page.keyboard.press('Shift+ArrowLeft');
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 01 / 06');
+  const downloadPromise = page.waitForEvent('download');
+  await page.keyboard.press('E');
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('onion-next-frame-contact-sheet.png');
   await expect(page.locator('#viewer-status')).toHaveText('Exported a contact sheet with 6 frames.');
 });
 
@@ -188,6 +228,24 @@ test('@claim:local-restore restores the latest real sequence after reload', asyn
   await page.reload();
   await expect(page.locator('#viewer-status')).toHaveText('Restored 2 saved frames from this browser.');
   await expect(page.locator('#current-counter')).toHaveText('FRAME 02 / 02');
+});
+
+test('@claim:start-for-real discards the demo and restores saved real work', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#file-input').setInputFiles(path.join(fixtures, 'frame-2.png'));
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 1 frame.');
+  await page.waitForTimeout(300);
+
+  await page.goto('/?demo=1');
+  await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 03 / 06');
+  await page.getByRole('link', { name: 'Start for real' }).click();
+
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('#viewer-status')).toHaveText('Restored 1 saved frame from this browser.');
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 01 / 01');
+  await expect(page.locator('#project-name')).toHaveText('frame-2.png');
+  await expect(page.getByText('Demo — sample data, nothing is saved')).toHaveCount(0);
 });
 
 test('a one-frame project uses singular restore copy', async ({ page }) => {
