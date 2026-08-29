@@ -86,15 +86,20 @@ The first screen states the job, names pixel artists, and puts the sample result
 | Exported a project file with six frames. | 7 | Pass |
 | Imported a project with six frames. | 6 | Pass |
 | This is not an Onion Next Frame project. | 8 | Pass |
-| Choose an exported project JSON file. | 6 | Pass |
+| Choose a project exported by this app. | 7 | Pass |
 | The project has an unreadable frame. | 6 | Pass |
-| Export it again from Onion Next Frame. | 7 | Pass |
+| Choose another project file or export it again from Onion Next Frame. | 12 | Pass |
+| The project has invalid layer settings. | 6 | Pass |
+| Choose another project file or export it again from Onion Next Frame. | 12 | Pass |
 | The project file is not valid JSON. | 7 | Pass |
 | Choose an exported project file. | 5 | Pass |
+| This GIF has no readable frames. | 6 | Pass |
+| Choose another GIF or export it again from the source editor. | 10 | Pass |
 | The sequence was cleared. | 4 | Pass |
 | Import frames to start again. | 5 | Pass |
 | Saved frames could not be opened. | 6 | Pass |
 | You can import the sequence again. | 6 | Pass |
+| Restored one saved frame from this browser. | 8 | Pass |
 
 File-specific errors add the failed file name before the audited instruction. Counts remain below the limit for supported names in the shipped fixtures.
 

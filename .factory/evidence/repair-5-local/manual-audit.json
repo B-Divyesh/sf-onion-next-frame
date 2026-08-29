@@ -1,0 +1,64 @@
+{
+  "base": "http://127.0.0.1:4174",
+  "desktop": {
+    "rejection": {
+      "missing": {
+        "status": "The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.",
+        "counter": "FRAME 03 / 06",
+        "frameButtons": 6
+      },
+      "malformed": {
+        "status": "The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.",
+        "counter": "FRAME 03 / 06",
+        "frameButtons": 6
+      },
+      "outOfRange": {
+        "status": "The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.",
+        "counter": "FRAME 03 / 06",
+        "frameButtons": 6
+      }
+    },
+    "continuedUse": {
+      "opacity": "50%",
+      "counter": "FRAME 04 / 06"
+    },
+    "validRecovery": "Imported a project with 6 frames.",
+    "corruptGif": "broken.gif has no readable GIF frames. Choose another GIF or export it again from the source editor.",
+    "gifRecovery": "Loaded 2 frames.",
+    "singularRestore": "Restored 1 saved frame from this browser.",
+    "requestOrigins": [
+      "http://127.0.0.1:4174"
+    ],
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scrollWidth": 390,
+    "undersized": [],
+    "axeSeriousCritical": []
+  },
+  "keyboard": {
+    "skipLink": {
+      "text": "Skip to main content",
+      "outlineWidth": "3px",
+      "outlineColor": "rgb(85, 230, 223)"
+    },
+    "demoActivated": true,
+    "layerVisibleAfterSpace": false,
+    "opacityAfterHome": "0%",
+    "arrowCounter": "FRAME 04 / 06",
+    "keyboardExport": "onion-next-frame-contact-sheet.png",
+    "reducedDuration": "1e-05s"
+  },
+  "offline": {
+    "counter": "FRAME 03 / 06",
+    "networkState": "Offline mode",
+    "caches": [
+      "onion-next-frame-v5"
+    ]
+  }
+}

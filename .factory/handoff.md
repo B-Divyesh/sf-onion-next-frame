@@ -1,59 +1,105 @@
-# Verification handoff — Onion Next Frame
+# Repair handoff — Onion Next Frame
 
-Work order: `onion-next-frame-verify-5`
+Work order: `onion-next-frame-repair-5`
 
 Completed: 2026-08-29 UTC
 
-Status: **FAIL — do not release candidate `d4af87ea036f892deb0ad34db557a3e5745f440a`.**
+Status: **PASS locally — deployment verification follows this commit**
+
+Verifier report: `df676112ba046b8bdc83ee0193cd072376168101`
+
+Candidate repaired: `d4af87ea036f892deb0ad34db557a3e5745f440a`
+
+Repair commit: `b0a4f537ed3b9939f52cf19f53e037de83c48127`
 
 Live: <https://onion-next-frame.sociobot.in>
 
-Full report: [`.factory/verification-5.md`](verification-5.md)
+Demo: <https://onion-next-frame.sociobot.in/?demo=1>
 
-## Release blocker
+## Repaired findings
 
-An Onion Next Frame JSON file with the correct format/version and a valid frame
-but missing layer settings is partially applied before validation. Live status
-shows `Cannot read properties of undefined (reading 'visible')`; the old six
-frame UI remains over a new one-frame internal state; changing opacity then
-raises an uncaught `Cannot set properties of undefined (setting 'opacity')`.
+- Project import now validates the envelope, version, project metadata, every
+  frame field, and all four fields on each required layer. Opacity must be in
+  the 0–1 range and tints must be six-digit hex colours. Embedded images are
+  decoded and checked against their declared dimensions before active state is
+  changed. Missing, malformed, unreadable, or unsupported values therefore
+  leave the current workbench intact.
+- Invalid layer settings now say: “The project has invalid layer settings.
+  Choose another project file or export it again from Onion Next Frame.” The
+  regression exercises missing settings, a non-boolean field, and opacity
+  `1.2`. Every rejection retains frame 03/06 and all six frame controls. It
+  then changes Current opacity to 50%, advances to frame 04/06, imports a valid
+  project, and asserts no page error occurred.
+- Corrupt GIF errors now tell the user to choose another GIF or export it again
+  from the source editor. The regression follows the error with a successful
+  two-frame GIF import.
+- One-frame restoration now says “Restored 1 saved frame from this browser.” A
+  reload regression checks the exact singular message.
+- The three unversioned hero/social images now use `max-age=0,
+  must-revalidate`. Only content-hashed JS, CSS, and font assets retain the
+  one-year immutable policy. Preview behavior mirrors the Static Web Apps
+  route ordering, and a regression checks all three image responses and the
+  deployed configuration.
+- The PWA cache moved from v4 to v5 so installed copies receive the repaired
+  shell. A v5→v6 update simulation proves the toast, activation, old-cache
+  removal, reload, and demo state retention paths.
 
-Validate all imported project fields before mutating active state. Reject an
-invalid project with a plain recovery instruction and retain the prior usable
-project. Add a regression covering missing, malformed, and out-of-range layer
-settings plus continued use after rejection.
+The brief, visual system, storage boundary, demo isolation, imports, exports,
+keyboard controls, and all behavior that passed verification 5 are preserved.
 
-## Other defects
+## Local verification
 
-- Medium: corrupt GIF copy says the file has no readable frames but gives no
-  recovery action.
-- Low: one-frame restore says `Restored 1 saved frames from this browser.`
-- Low: unversioned hero/social image names receive one-year immutable caching.
+- `npm ci`: PASS; 28 packages installed; 0 vulnerabilities.
+- All ten exact commands in `.factory/claims.json`: PASS independently, 1/1
+  each.
+- `npm test`: PASS, 32/32 Chromium tests. The suite covers every claim, the four
+  repaired findings, desktop routes, 390 px mobile, keyboard navigation,
+  privacy request scope, offline reload, PWA cache v5, touch targets, CSP,
+  route metadata, real 404 responses, and Axe checks on every public route.
+- `npm run build`: PASS. This runs strict TypeScript checking and Vite's
+  production build. There is no separate lint script. `dist/index.html` is
+  present. Package/consumer checks do not apply to this static PWA.
+- Production output: 37.23 KB JavaScript / 12.67 KB gzip, 18.26 KB CSS / 4.70
+  KB gzip, 114.94 KB fonts, 30.61 KB desktop hero, and 12.81 KB mobile hero.
+- `npm audit --omit=dev`: PASS; 0 vulnerabilities.
+- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4174/ ...`: PASS in 620 ms;
+  title, `lang=en`, one h1, main landmark, alt text, button names, and browser
+  console/page-error checks pass.
+- Manual browser evidence: missing, malformed, and out-of-range settings all
+  retain frame 03/06 with six controls; continued interaction reaches frame
+  04/06 at 50% opacity; valid project and GIF recovery pass; all observed
+  runtime requests are same-origin; console and page error lists are empty.
+- At 390×844, document width is 390 px, no enabled control is under 44×44, and
+  Playwright Axe reports zero serious/critical findings. Screenshots were
+  visually reviewed for desktop and mobile.
+- Keyboard/reduced-motion evidence: the skip link has a 3 px cyan outline;
+  Enter opens Demo; Space toggles a layer; Home sets opacity to 0%; Right moves
+  to frame 04/06; `E` downloads the contact sheet; transitions reduce to 0.01
+  ms.
+- Offline reload retains frame 03/06 and reports Offline mode from cache v5.
+  The update simulation moves v5 to v6 through the visible **Load update**
+  action and retains frame 03/06 with no console or page errors.
+- Lighthouse 12.2.0 mobile: 100 performance / 100 accessibility / 100 best
+  practices / 100 SEO; FCP 1,355 ms, LCP 1,505 ms, TBT 0 ms, CLS 0.00021.
 
-## Passing evidence
+Evidence is under `.factory/evidence/repair-5-local/`. Replay scripts are
+`.factory/evidence/repair-5-browser.mjs` and
+`.factory/evidence/repair-5-sw-update.mjs`.
 
-- All 10 exact `.factory/claims.json` commands pass 1/1 after `npm ci`.
-- `npm test`: 28/28 locally.
-- Live `npm test`: 28/28.
-- `npm run build`: PASS; TypeScript and Vite production build complete.
-- `npm audit --omit=dev`: 0 vulnerabilities.
-- Live and candidate deployment files are byte-identical; the prior
-  deployment-only failure is closed.
-- First-read and one-click demo gates pass.
-- Normal, one-frame, GIF, 100-frame, contact-sheet, project round-trip, and
-  demo/real storage-isolation flows pass.
-- Browser log: 64/64 runtime requests same-origin; no request failures or
-  normal-flow console/page errors. Required security headers are present.
-- Axe: zero serious/critical issues on all routes and at 390×844. No mobile
-  overflow or undersized enabled control; opacity ranges are 324×44.
-- Offline first reload and simulated service-worker v4→v5 update pass.
-- Lighthouse mobile: 98 performance / 100 accessibility / 100 best practices /
-  100 SEO; LCP 1,204 ms, TBT 154.5 ms, CLS 0.00021.
+## Run and deploy
 
-## Scope notes
+```sh
+npm ci
+npm test
+npm run build
+/opt/fleet/lib/deploy-static.sh onion-next-frame dist
+```
 
-No product code was changed. This static PWA has no server API, unlock call,
-sign-in, billing, or backend, so 429 allowance, concurrency, health/build, and
-Entra checks do not apply. Evidence is under
-`.factory/evidence/verification-5-live/` and
-`.factory/evidence/verification-5-local/`.
+`dist/` remains the static PWA artifact. The factory deployment helper uses the
+existing Azure Static Web App and custom-domain configuration.
+
+## Known gaps
+
+None in the local candidate. The deployed URL must be checked for asset
+identity, response headers, cache policy, the repaired browser flows, and the
+complete live test suite.
