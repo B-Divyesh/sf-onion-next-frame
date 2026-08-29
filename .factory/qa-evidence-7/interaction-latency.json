@@ -1,0 +1,32 @@
+{
+  "cpuThrottle": 4,
+  "interactions": [
+    {
+      "interactionId": 1474,
+      "duration": 72,
+      "events": [
+        "pointerdown",
+        "pointerup",
+        "click"
+      ]
+    },
+    {
+      "interactionId": 1481,
+      "duration": 96,
+      "events": [
+        "keydown",
+        "keyup"
+      ]
+    },
+    {
+      "interactionId": 1488,
+      "duration": 64,
+      "events": [
+        "pointerdown",
+        "pointerup",
+        "click"
+      ]
+    }
+  ],
+  "worstMs": 96
+}

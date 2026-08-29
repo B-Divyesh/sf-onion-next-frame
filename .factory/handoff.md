@@ -1,32 +1,33 @@
 # Handoff — Onion Next Frame
 
-Work order: `onion-next-frame-polish-2`
+Work order: `onion-next-frame-verify-7`
 Completed: 2026-08-29 UTC
-Status: **PASS**
+Status: **FAIL**
+Requested candidate: `59a3f08103317357160047c6efbb28bc96c434d1`
+Available checkout and remote `main`: `59a3f077a72799d641a16fb34f3e75cdc8283d9c`
 Live: <https://onion-next-frame.sociobot.in>
 Demo: <https://onion-next-frame.sociobot.in/?demo=1>
 
-## Delivered
+## Verification outcome
 
-- Closed every finding in reviews 1 and 2, all earlier polish/verification records, and the remaining one-frame confirmation grammar defect.
-- Removed the inaccessible decorative hero text at its real source: `.hero-art::before`. The original cyan/amber/magenta frame art and HTML previous/current/next legend remain.
-- Rewrote the README and footer in plain words; GIF guidance now tells people to export numbered PNG frames when import fails.
-- Preserved the isolated one-click `?demo=1` path, persistent banner/reset/start-real controls, local-only storage boundary, real routes/titles/404/legal links, mobile layout, PWA cache/update behavior, and visual identity.
-- Updated the verb-first catalog description: “Compare nearby animation frames in your browser.”
+- The requested candidate cannot be resolved locally or fetched from GitHub (`upload-pack: not our ref`). Candidate testing and live/candidate identity are therefore impossible.
+- The live deployment is byte-identical across all 31 served files to the available base `59a3f077...`; the previously reported deployment-only failure is absent for that build.
+- After `npm ci`, every exact claim command passed (10/10), the full local and live suites passed (34/34 each), TypeScript passed, the production build created `dist/`, and the production audit found no vulnerabilities.
+- Independent desktop/mobile, normal, 100-frame, one-frame, invalid-input, recovery, keyboard, export/import, privacy, offline, service-worker update, caching, headers, accessibility, and performance checks otherwise passed.
+- Release remains blocked because `.factory/claims.json` omits visitor-facing drag/drop, keyboard/`E`, and Start-for-real promises and their required tagged claim tests.
 
-## Verification
+## Quality snapshot
 
-- Final product commits: `1c4a4e1` and `31a0275` (this handoff follows in the documentation commit).
-- Fresh GitHub clone `/tmp/onion-polish-2-final-sgvRg5`: `npm ci`, `npm run build`, and `npm test` passed; browser suite was 34/34.
-- Every exact command in `.factory/claims.json` passed separately from that clean clone, one test per claim.
-- `npm audit --omit=dev`: 0 vulnerabilities.
-- Deployed with `/opt/fleet/lib/deploy-static.sh onion-next-frame /work/repo/dist`; Azure deployment `3f4412ed-0b2f-484c-8bd8-f30234b9b94f` succeeded.
-- Live: `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test` passed 34/34.
-- Live factory verifier passed; [`verify.json`](evidence/polish-2-live-final/verify.json) records 200, no console errors, title, `lang`, h1, main, image alts, and button labels.
-- Cold live visual checks: [`desktop`](evidence/polish-2-live-final/screenshot-desktop.png) and [`mobile`](evidence/polish-2-live-final/screenshot-mobile.png). The 390px layout fits, has 44px controls, and the hero contains no decorative lettering.
+- Lighthouse mobile: Performance 90, Accessibility 100, Best Practices 100, SEO 100; LCP 1.230 s, CLS 0.000024, 117,423 bytes transferred.
+- Bundle: 37,270-byte JS and 18,125-byte CSS; emitted fonts 114,936 bytes; mobile hero 12,814 bytes.
+- Playwright request log: 48/48 requests same-origin, no failed request, console error, or page error.
+- Axe: zero serious/critical findings on independently checked desktop and 390 px mobile screens.
+- Offline reload and simulated cache v6→v7 update: PASS.
 
-See [polish-2.md](polish-2.md) for the complete finding-to-evidence map.
+## Required next steps
 
-## Known gaps
+1. Publish the exact requested candidate commit, or issue a corrected immutable SHA and rerun independent verification against it.
+2. Add claim entries and exactly one tagged sandbox test each for drag/drop, the documented keyboard shortcuts (including Shift and `E`), and Start for real; alternatively remove those promises.
+3. Rerun all claim commands, the full local/live suite, build comparison, and deployment identity check from the corrected candidate.
 
-None.
+Full evidence and defect detail: [verification-7.md](verification-7.md) and `.factory/qa-evidence-7/`.

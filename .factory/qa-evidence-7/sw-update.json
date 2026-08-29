@@ -1,0 +1,17 @@
+{
+  "oldCaches": [
+    "onion-next-frame-v6"
+  ],
+  "waitingVisible": true,
+  "cachesBeforeApply": [
+    "onion-next-frame-v6",
+    "onion-next-frame-v7"
+  ],
+  "newCaches": [
+    "onion-next-frame-v7"
+  ],
+  "errors": [],
+  "counterAfterUpdate": "FRAME 03 / 06",
+  "bannerAfterUpdate": true,
+  "controllerAfterUpdate": true
+}

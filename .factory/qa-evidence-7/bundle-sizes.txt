@@ -1,0 +1,1 @@
+js_raw=37270 js_gzip=12693 css_raw=18125 css_gzip=4655 font_raw=114936 hero_mobile=12814

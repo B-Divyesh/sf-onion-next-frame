@@ -1,0 +1,64 @@
+
+> onion-next-frame@1.0.0 test
+> playwright test
+
+[1A[2K[WebServer] (node:2762) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K[WebServer] (node:2793) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 34 tests using 2 workers
+
+[1A[2K(node:2811) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:2812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:2811) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:2812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/34] [chromium] › tests/claims.spec.ts:6:1 › @claim:demo-sandbox sample demo is ready and does not save
+[1A[2K[2/34] [chromium] › tests/claims.spec.ts:20:1 › @claim:sample-six-frame-demo loads the promised six-frame run cycle
+[1A[2K[3/34] [chromium] › tests/claims.spec.ts:27:1 › @claim:sequence-import imports numbered PNG files and an animated GIF
+[1A[2K[4/34] [chromium] › tests/claims.spec.ts:43:1 › a corrupt PNG gives an actionable recovery message and a valid import still works
+[1A[2K[5/34] [chromium] › tests/claims.spec.ts:52:1 › a corrupt GIF gives an actionable recovery message and a valid import still works
+[1A[2K[6/34] [chromium] › tests/claims.spec.ts:61:1 › @claim:three-layer-preview shows and adjusts three neighbour layers
+[1A[2K[7/34] [chromium] › tests/claims.spec.ts:75:1 › @claim:contact-sheet exports every frame as one PNG
+[1A[2K[8/34] [chromium] › tests/claims.spec.ts:90:1 › @claim:project-transfer exports and imports a project JSON file
+[1A[2K[9/34] [chromium] › tests/claims.spec.ts:107:1 › invalid project settings are rejected atomically and the current workbench stays usable
+[1A[2K[10/34] [chromium] › tests/claims.spec.ts:152:1 › @claim:privacy-local keeps artwork requests on the same origin
+[1A[2K[11/34] [chromium] › tests/claims.spec.ts:168:1 › @claim:offline-reload works offline after the first visit
+[1A[2K[12/34] [chromium] › tests/claims.spec.ts:180:1 › @claim:local-restore restores the latest real sequence after reload
+[1A[2K[13/34] [chromium] › tests/claims.spec.ts:193:1 › a one-frame project uses singular restore copy
+[1A[2K[14/34] [chromium] › tests/claims.spec.ts:202:1 › a one-frame project uses singular clear confirmation copy
+[1A[2K[15/34] [chromium] › tests/claims.spec.ts:215:1 › @claim:free-use has no payment or account gate
+[1A[2K[16/34] [chromium] › tests/quality.spec.ts:13:3 › / has its own title, one h1, and no serious accessibility findings
+[1A[2K[17/34] [chromium] › tests/quality.spec.ts:13:3 › /?demo=1 has its own title, one h1, and no serious accessibility findings
+[1A[2K[18/34] [chromium] › tests/quality.spec.ts:13:3 › /demo has its own title, one h1, and no serious accessibility findings
+[1A[2K[19/34] [chromium] › tests/quality.spec.ts:13:3 › /privacy has its own title, one h1, and no serious accessibility findings
+[1A[2K[20/34] [chromium] › tests/quality.spec.ts:13:3 › /terms has its own title, one h1, and no serious accessibility findings
+[1A[2K[21/34] [chromium] › tests/quality.spec.ts:13:3 › /not-a-frame has its own title, one h1, and no serious accessibility findings
+[1A[2K[22/34] [chromium] › tests/quality.spec.ts:33:1 › history, keyboard frame controls, and focus all work
+[1A[2K[23/34] [chromium] › tests/quality.spec.ts:45:1 › the first-screen sample action opens the isolated query-string demo in one click
+[1A[2K[24/34] [chromium] › tests/quality.spec.ts:53:1 › the hero has no decorative lettering and keeps its useful description in HTML
+[1A[2K[25/34] [chromium] › tests/quality.spec.ts:63:1 › the workbench fits a 390px phone without horizontal scrolling
+[1A[2K[26/34] [chromium] › tests/quality.spec.ts:70:1 › every visible landing-page link and button has a 44px touch target at 390px
+[1A[2K[27/34] [chromium] › tests/quality.spec.ts:86:1 › every enabled demo control, including all layer inputs, has a 44px touch target at 390px
+[1A[2K[28/34] [chromium] › tests/quality.spec.ts:114:1 › unknown document routes return the designed page with a real HTTP 404
+[1A[2K[29/34] [chromium] › tests/quality.spec.ts:132:1 › metadata, manifest, and original social image are reachable
+[1A[2K[30/34] [chromium] › tests/quality.spec.ts:142:1 › route metadata updates with client-side navigation
+[1A[2K[31/34] [chromium] › tests/quality.spec.ts:152:1 › strict CSP loads only same-origin emitted font assets without console errors
+[1A[2K[32/34] [chromium] › tests/quality.spec.ts:178:1 › hashed production assets have long-lived immutable caching
+[1A[2K[33/34] [chromium] › tests/quality.spec.ts:207:1 › unversioned product images revalidate instead of being cached as immutable
+[1A[2K[34/34] [chromium] › tests/quality.spec.ts:231:1 › service worker installs the current cache generation for updates
+[1A[2K  34 passed (56.9s)

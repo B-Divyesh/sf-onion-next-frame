@@ -1,0 +1,21 @@
+src/app.ts:53:      <nav aria-label="Footer navigation"><a href="/privacy" data-nav>Privacy</a><a href="/terms" data-nav>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory <span class="sr-only">(external site)</span>↗</a></nav>
+src/app.ts:187:  return shell(`<article class="legal-page"><p class="eyebrow">Privacy</p><h1 id="page-title" tabindex="-1">Your drawings stay in your browser</h1><p class="lede">Onion Next Frame has no account, server upload, analytics, or advertising.</p><h2>Files you import</h2><p>Your browser decodes PNG and GIF files on this device. The app stores the latest real sequence in IndexedDB so it can survive a reload.</p><h2>Demo data</h2><p>The demo builds six sample frames in memory. It does not read or write your saved sequence.</p><h2>Network use</h2><p>The service worker downloads and caches the app files. The app sends no artwork or usage data anywhere.</p><h2>Remove local data</h2><p>Choose “Clear sequence” in the light table. You can also clear this site's storage in your browser settings.</p><p>Last updated: 28 August 2026.</p></article>`);
+src/app.ts:702:  const canonicalUrl = `https://onion-next-frame.sociobot.in${canonicalPath}`;
+public/robots.txt:4:Sitemap: https://onion-next-frame.sociobot.in/sitemap.xml
+public/sw.js:41:      fetch(request)
+public/sw.js:56:      const network = fetch(request).then((response) => {
+public/sitemap.xml:2:<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+public/sitemap.xml:3:  <url><loc>https://onion-next-frame.sociobot.in/</loc></url>
+public/sitemap.xml:4:  <url><loc>https://onion-next-frame.sociobot.in/demo</loc></url>
+public/sitemap.xml:5:  <url><loc>https://onion-next-frame.sociobot.in/privacy</loc></url>
+public/sitemap.xml:6:  <url><loc>https://onion-next-frame.sociobot.in/terms</loc></url>
+public/favicon.svg:1:<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+index.html:8:    <link rel="canonical" href="https://onion-next-frame.sociobot.in/" />
+index.html:12:    <meta property="og:url" content="https://onion-next-frame.sociobot.in/" />
+index.html:13:    <meta property="og:image" content="https://onion-next-frame.sociobot.in/assets/onion-next-frame-og.webp" />
+index.html:19:    <meta name="twitter:image" content="https://onion-next-frame.sociobot.in/assets/onion-next-frame-og.webp" />
+README.md:7:Live site: <https://onion-next-frame.sociobot.in>
+README.md:19:Images stay on the device. There is no account, upload, analytics, advertising, or payment gate. Real projects use IndexedDB. The sample demo uses memory only.
+README.md:23:Open `/?demo=1` or <https://onion-next-frame.sociobot.in/?demo=1>. Six original sample frames load immediately. The cyan banner remains visible while demo mode is active. **Reset demo** restores the sample. **Start for real** discards it and returns to an empty or previously saved project. `/demo` remains available as a short link.
+.factory/claims.json:46:    "claim": "Images stay on the device with no account, upload, analytics, or advertising",
+.factory/claims.json:70:    "sandbox": "fresh browser context; assert the free-use fact and absence of account, buy, checkout, or login gates"

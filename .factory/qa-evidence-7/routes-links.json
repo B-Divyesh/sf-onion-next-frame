@@ -1,0 +1,105 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "status": 200,
+      "title": "Onion Next Frame — Compare animation frames",
+      "h1": [
+        "Compare the frames before and after"
+      ],
+      "mains": 1
+    },
+    {
+      "route": "/?demo=1",
+      "status": 200,
+      "title": "Demo — Onion Next Frame",
+      "h1": [
+        "Compare the frames before and after"
+      ],
+      "mains": 1
+    },
+    {
+      "route": "/demo",
+      "status": 200,
+      "title": "Demo — Onion Next Frame",
+      "h1": [
+        "Compare the frames before and after"
+      ],
+      "mains": 1
+    },
+    {
+      "route": "/privacy",
+      "status": 200,
+      "title": "Privacy — Onion Next Frame",
+      "h1": [
+        "Your drawings stay in your browser"
+      ],
+      "mains": 1
+    },
+    {
+      "route": "/terms",
+      "status": 200,
+      "title": "Terms — Onion Next Frame",
+      "h1": [
+        "Use the tool on artwork you control"
+      ],
+      "mains": 1
+    },
+    {
+      "route": "/definitely-missing",
+      "status": 404,
+      "title": "Missing frame — Onion Next Frame",
+      "h1": [
+        "This frame is missing."
+      ],
+      "mains": 1
+    }
+  ],
+  "links": [
+    {
+      "link": "https://onion-next-frame.sociobot.in/#main",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/demo",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/privacy",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/?demo=1",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/terms",
+      "status": 200
+    },
+    {
+      "link": "https://sociobot.in/",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/?demo=1#main",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/demo#main",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/privacy#main",
+      "status": 200
+    },
+    {
+      "link": "https://onion-next-frame.sociobot.in/terms#main",
+      "status": 200
+    }
+  ],
+  "errors": []
+}
