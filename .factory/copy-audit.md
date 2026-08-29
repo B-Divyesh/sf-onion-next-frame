@@ -128,7 +128,7 @@ File-specific errors add the failed file name before the audited instruction. Co
 
 ## Raster hero check
 
-The checked-in source and responsive WebP derivatives were visually inspected on 2026-08-29. They contain only the three original cyan, amber, and magenta runner poses and no baked lettering. The useful previous/current/next legend remains HTML text in the figure caption.
+The checked-in source and responsive WebP derivatives were visually inspected on 2026-08-29. They contain only the three original cyan, amber, and magenta runner poses and no baked lettering. The former decorative `FRAME STUDY / 03` CSS pseudo-label was removed. The useful previous/current/next legend remains HTML text in the figure caption.
 
 ## Catalog description
 

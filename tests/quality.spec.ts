@@ -50,12 +50,13 @@ test('the first-screen sample action opens the isolated query-string demo in one
   await expect(page.locator('h1')).toBeFocused();
 });
 
-test('the hero uses the reviewed text-free frame art and keeps its useful description in HTML', async ({ page }) => {
+test('the hero has no decorative lettering and keeps its useful description in HTML', async ({ page }) => {
   await page.goto('/');
   const hero = page.locator('.hero-art img');
   await expect(hero).toHaveAttribute('src', '/assets/hero-1200.webp');
   await expect(hero).toHaveAttribute('alt', 'Three pixel creature poses show the previous, current, and next animation frames.');
   await expect(page.locator('.hero-art')).not.toContainText(/FRAME STUDY/i);
+  await expect(page.locator('.hero-art').evaluate((element) => getComputedStyle(element, '::before').content)).resolves.toBe('none');
   await expect(page.locator('.hero-art figcaption')).toHaveText(/PREVIOUS[\s\S]*CURRENT[\s\S]*NEXT/);
 });
 
@@ -231,5 +232,5 @@ test('service worker installs the current cache generation for updates', async (
   await page.goto('/demo');
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   const cacheNames = await page.evaluate(async () => caches.keys());
-  expect(cacheNames).toContain('onion-next-frame-v6');
+  expect(cacheNames).toContain('onion-next-frame-v7');
 });
