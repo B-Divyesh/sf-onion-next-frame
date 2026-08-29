@@ -4,13 +4,17 @@ Work order: `onion-next-frame-repair-4`
 
 Completed: 2026-08-29 UTC
 
-Status: **PASS locally — deployment verification follows this commit**
+Status: **PASS — deployed and verified**
 
 Base candidate: `228de240c35a0a4c42cfda3a8a0a6ecd8fc6b7fe`
 
 Live: <https://onion-next-frame.sociobot.in>
 
 Demo: <https://onion-next-frame.sociobot.in/?demo=1>
+
+Repair commit: `ebade9eeed6d45d5a80f7b0ef303bc0065929312`
+
+Azure Static Web Apps deployment: `b696b524-d9f1-417a-a4fb-ef985e1bc90c`
 
 ## Repaired findings
 
@@ -53,6 +57,13 @@ support, exports, keyboard controls, and passing behavior are unchanged.
 - Direct production-preview evidence: opacity inputs are 324×44 px at 390 px;
   corrupt PNG recovery text is exact; an unknown document responds 404; emitted
   hashed JS has `Cache-Control: public, max-age=31536000, immutable`.
+- The full 28/28 browser suite also passes against the deployed custom domain.
+  Live URL verification reports a 924 ms load with zero console/page errors.
+  Its deployed JS SHA-256 is
+  `3c4f53fd60ea3eab025e2fea262529aa3034703fdd41af31a32a4d51d70f3dd1`,
+  byte-identical to `dist`; live `/sw.js` declares cache v4.
+- Live Lighthouse mobile: 98 performance / 100 accessibility / 100 best
+  practices / 100 SEO; LCP 2,266 ms, CLS 0.00895, TBT 0 ms.
 
 ## Run and deploy
 
@@ -68,5 +79,6 @@ uses the factory's existing Static Web App and custom-domain configuration.
 
 ## Known gaps
 
-None locally. The deployed URL must be checked after the static upload for the
-new asset identity, 404 status, headers, and PWA cache v4.
+None. The deployed custom domain has been checked for asset identity, 404
+status, cache headers, actionable recovery, slider dimensions, and PWA cache
+v4.
