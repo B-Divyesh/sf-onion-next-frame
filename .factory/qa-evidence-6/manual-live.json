@@ -1,0 +1,614 @@
+{
+  "checks": {
+    "keyboard": {
+      "skip": {
+        "text": "Skip to main content",
+        "outline": "3px solid rgb(85, 230, 223)",
+        "rect": {
+          "x": 16,
+          "y": 8,
+          "width": 202,
+          "height": 51,
+          "top": 8,
+          "right": 218,
+          "bottom": 59,
+          "left": 16
+        }
+      },
+      "shortcutSheet": {
+        "bytes": 31064,
+        "width": 880,
+        "height": 560
+      },
+      "reducedMotion": {
+        "matches": true,
+        "nonzeroElements": 196,
+        "uniqueDurations": [
+          "1e-05s"
+        ]
+      },
+      "routeFocus": true
+    },
+    "invalidProjects": [
+      {
+        "name": "bad-json.json",
+        "status": "The project file is not valid JSON. Choose an exported project file.",
+        "counter": "FRAME 03 / 06",
+        "controls": 6
+      },
+      {
+        "name": "bad-version.json",
+        "status": "This is not an Onion Next Frame project. Choose a project exported by this app.",
+        "counter": "FRAME 03 / 06",
+        "controls": 6
+      },
+      {
+        "name": "missing-settings.json",
+        "status": "The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.",
+        "counter": "FRAME 03 / 06",
+        "controls": 6
+      },
+      {
+        "name": "bad-opacity.json",
+        "status": "The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.",
+        "counter": "FRAME 03 / 06",
+        "controls": 6
+      },
+      {
+        "name": "bad-tint.json",
+        "status": "The project has invalid layer settings. Choose another project file or export it again from Onion Next Frame.",
+        "counter": "FRAME 03 / 06",
+        "controls": 6
+      },
+      {
+        "name": "bad-current.json",
+        "status": "This is not an Onion Next Frame project. Choose a project exported by this app.",
+        "counter": "FRAME 03 / 06",
+        "controls": 6
+      },
+      {
+        "name": "bad-dimensions.json",
+        "status": "The project has an unreadable frame. Choose another project file or export it again from Onion Next Frame.",
+        "counter": "FRAME 03 / 06",
+        "controls": 6
+      }
+    ],
+    "boundaries": {
+      "invalidFileStatus": "notes.txt is not a PNG or GIF. Choose numbered PNG or GIF files.",
+      "corruptPngStatus": "broken.png could not be opened as a PNG. Choose another PNG or export it again from the source editor.",
+      "corruptGifStatus": "broken.gif has no readable GIF frames. Choose another GIF or export it again from the source editor.",
+      "oneSheet": {
+        "bytes": 8692,
+        "width": 220,
+        "height": 308
+      },
+      "largeSheet": {
+        "bytes": 255161,
+        "width": 880,
+        "height": 6356
+      },
+      "frameCount": 100
+    },
+    "demoBoundary": {
+      "restored": true,
+      "project": "real-001.png"
+    },
+    "routesAndAxe": [
+      {
+        "route": "/",
+        "status": 200,
+        "title": "Onion Next Frame — Compare animation frames",
+        "h1": 1,
+        "main": 1,
+        "serious": [],
+        "outline": [
+          {
+            "level": 1,
+            "text": "Compare the frames before and after"
+          },
+          {
+            "level": 2,
+            "text": "Check the in-between drawing"
+          },
+          {
+            "level": 2,
+            "text": "Compare frames in three steps"
+          },
+          {
+            "level": 3,
+            "text": "Import the sequence"
+          },
+          {
+            "level": 3,
+            "text": "Tune each neighbour"
+          },
+          {
+            "level": 3,
+            "text": "Export the sheet"
+          },
+          {
+            "level": 2,
+            "text": "This is a reviewer, not an editor"
+          }
+        ]
+      },
+      {
+        "route": "/demo",
+        "status": 200,
+        "title": "Demo — Onion Next Frame",
+        "h1": 1,
+        "main": 1,
+        "serious": [],
+        "outline": [
+          {
+            "level": 1,
+            "text": "Compare the frames before and after"
+          },
+          {
+            "level": 2,
+            "text": "Check the in-between drawing"
+          },
+          {
+            "level": 2,
+            "text": "Compare frames in three steps"
+          },
+          {
+            "level": 3,
+            "text": "Import the sequence"
+          },
+          {
+            "level": 3,
+            "text": "Tune each neighbour"
+          },
+          {
+            "level": 3,
+            "text": "Export the sheet"
+          },
+          {
+            "level": 2,
+            "text": "This is a reviewer, not an editor"
+          }
+        ]
+      },
+      {
+        "route": "/privacy",
+        "status": 200,
+        "title": "Privacy — Onion Next Frame",
+        "h1": 1,
+        "main": 1,
+        "serious": [],
+        "outline": [
+          {
+            "level": 1,
+            "text": "Your drawings stay in your browser"
+          },
+          {
+            "level": 2,
+            "text": "Files you import"
+          },
+          {
+            "level": 2,
+            "text": "Demo data"
+          },
+          {
+            "level": 2,
+            "text": "Network use"
+          },
+          {
+            "level": 2,
+            "text": "Remove local data"
+          }
+        ]
+      },
+      {
+        "route": "/terms",
+        "status": 200,
+        "title": "Terms — Onion Next Frame",
+        "h1": 1,
+        "main": 1,
+        "serious": [],
+        "outline": [
+          {
+            "level": 1,
+            "text": "Use the tool on artwork you control"
+          },
+          {
+            "level": 2,
+            "text": "Your responsibility"
+          },
+          {
+            "level": 2,
+            "text": "No warranty"
+          },
+          {
+            "level": 2,
+            "text": "Acceptable use"
+          },
+          {
+            "level": 2,
+            "text": "Changes"
+          }
+        ]
+      },
+      {
+        "route": "/definitely-missing",
+        "status": 404,
+        "title": "Missing frame — Onion Next Frame",
+        "h1": 1,
+        "main": 1,
+        "serious": [],
+        "outline": [
+          {
+            "level": 1,
+            "text": "This frame is missing."
+          }
+        ]
+      }
+    ],
+    "privacy": {
+      "requestCount": 68,
+      "origins": [
+        "https://onion-next-frame.sociobot.in"
+      ],
+      "databases": [
+        "onion-next-frame"
+      ],
+      "iframes": 0,
+      "passwordInputs": 0
+    },
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyFontSize": "17px",
+      "undersized": [],
+      "serious": [],
+      "errors": []
+    }
+  },
+  "errors": [
+    "console: Failed to load resource: the server responded with a status of 404 ()"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/hero-1200.webp",
+      "type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/hero-1200.webp",
+      "type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/hero-1200.webp",
+      "type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/hero-1200.webp",
+      "type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/demo",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/hero-1200.webp",
+      "type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/hero-1200.webp",
+      "type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/demo",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/privacy",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/terms",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/definitely-missing",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/fallback.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/demo",
+      "type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-BWi0FSxo.js",
+      "type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/index-D40wvSRW.css",
+      "type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/silkscreen-latin-400-normal-BPgV6gMp.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-400-normal-BKTgBNmI.woff2",
+      "type": "font"
+    },
+    {
+      "method": "GET",
+      "url": "https://onion-next-frame.sociobot.in/assets/atkinson-hyperlegible-latin-700-normal-BriLmxM2.woff2",
+      "type": "font"
+    }
+  ],
+  "result": "PASS"
+}

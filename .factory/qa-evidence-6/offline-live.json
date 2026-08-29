@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "before": {
+    "controlled": true,
+    "caches": [
+      "onion-next-frame-v5"
+    ],
+    "counter": "FRAME 03 / 06"
+  },
+  "after": {
+    "title": "Demo — Onion Next Frame",
+    "counter": "FRAME 03 / 06",
+    "network": "Offline mode",
+    "banner": "Demo — sample data, nothing is savedReset demoStart for real"
+  },
+  "errors": []
+}
