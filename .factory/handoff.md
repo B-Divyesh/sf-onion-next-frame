@@ -2,7 +2,7 @@
 
 Work order: `onion-next-frame-repair-3`
 Repair base: `600e90e8092fc99c303c29980536e7c9b3a06167`
-Repaired candidate: recorded after the repair commit is created and pushed.
+Repair commit: `586bb62c70eaf63e2f843e5bb157c8bf025f64dc`.
 
 ## Result
 
