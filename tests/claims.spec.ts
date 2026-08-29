@@ -25,6 +25,26 @@ test('@claim:sample-six-frame-demo loads the promised six-frame run cycle', asyn
   await expect(page.locator('#viewer-status')).toHaveText('Loaded 6 sample frames. Nothing is saved.');
 });
 
+test('@claim:demo-first-viewport opens a usable seeded frame comparison without scrolling', async ({ page }) => {
+  for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/?demo=1');
+    await expect(page.locator('#current-counter')).toHaveText('FRAME 03 / 06');
+    const bounds = await page.locator('#onion-canvas, #current-counter, #previous-frame, #next-frame').evaluateAll((elements) =>
+      elements.map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { id: element.id, top: rect.top, bottom: rect.bottom, height: rect.height };
+      })
+    );
+    const byId = Object.fromEntries(bounds.map((bound) => [bound.id, bound]));
+    expect(byId['onion-canvas'].height).toBeGreaterThanOrEqual(250);
+    for (const id of ['onion-canvas', 'current-counter', 'previous-frame', 'next-frame']) {
+      expect(byId[id].top).toBeGreaterThanOrEqual(0);
+      expect(byId[id].bottom).toBeLessThanOrEqual(viewport.height);
+    }
+  }
+});
+
 test('@claim:sequence-import imports numbered PNG files and an animated GIF', async ({ page }) => {
   await page.goto('/');
   const input = page.locator('#file-input');
@@ -39,6 +59,24 @@ test('@claim:sequence-import imports numbered PNG files and an animated GIF', as
   await input.setInputFiles(path.join(fixtures, 'two-frame.gif'));
   await expect(page.locator('#viewer-status')).toHaveText('Loaded 2 frames.');
   await expect(page.locator('#project-name')).toContainText('two-frame-01.png');
+});
+
+test('@claim:scope-boundaries ships a local frame reviewer without editor, account, collaboration, or sync controls', async ({ page }) => {
+  const requests: string[] = [];
+  page.on('request', (request) => requests.push(request.url()));
+  await page.goto('/demo');
+
+  await expect(page.getByText('It does not include painting, frame generation, accounts, collaboration, or sync.')).toBeVisible();
+  await expect(page.locator('canvas[role="img"]')).toHaveCount(1);
+  await expect(page.locator('textarea, [contenteditable="true"], input[type="text"], input[type="email"], input[type="password"]')).toHaveCount(0);
+
+  const controlNames = await page.locator('button, a, input').evaluateAll((controls) => controls.map((control) => {
+    const input = control as HTMLInputElement;
+    return `${input.getAttribute('aria-label') ?? ''} ${input.textContent ?? ''} ${input.type ?? ''}`.toLowerCase();
+  }));
+  expect(controlNames.filter((name) => /paint|draw|interpol|generat|account|collabor|sync/.test(name))).toEqual([]);
+  const pageOrigin = new URL(page.url()).origin;
+  expect(requests.every((url) => new URL(url).origin === pageOrigin)).toBeTruthy();
 });
 
 test('@claim:drag-drop-import drops PNG and GIF files into the preview to import them', async ({ page }) => {
@@ -205,9 +243,17 @@ test('@claim:privacy-local keeps artwork requests on the same origin', async ({ 
   expect(await page.locator('input[type="password"]').count()).toBe(0);
 });
 
-test('@claim:offline-reload works offline after the first visit', async ({ page, context }) => {
+test('@claim:offline-reload reports readiness honestly and works offline after the first visit', async ({ page, context, browser }) => {
   await page.goto('/demo');
+  const baseURL = new URL(page.url()).origin;
+  const blockedContext = await browser.newContext({ serviceWorkers: 'block' });
+  const blockedPage = await blockedContext.newPage();
+  await blockedPage.goto(`${baseURL}/demo`);
+  await expect(blockedPage.locator('#network-state')).toHaveText('Online');
+  await blockedContext.close();
+
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+  await expect(page.locator('#network-state')).toHaveText('Ready offline');
   await page.reload();
   await expect(page.locator('#current-counter')).toHaveText('FRAME 03 / 06');
   await context.setOffline(true);

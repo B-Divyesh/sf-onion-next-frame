@@ -1,5 +1,5 @@
 // Bump when the precached shell changes so installed copies replace old assets.
-const CACHE = 'onion-next-frame-v7';
+const CACHE = 'onion-next-frame-v8';
 const SHELL = [
   '/',
   '/demo',
@@ -7,6 +7,7 @@ const SHELL = [
   '/terms',
   '/index.html',
   '/offline.html',
+  '/404.html',
   '/fallback.css',
   '/manifest.webmanifest',
   '/favicon.svg',

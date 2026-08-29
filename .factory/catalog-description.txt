@@ -1,1 +1,1 @@
-Compare nearby animation frames in your browser.
+Compare animation frames in your browser before exporting a contact sheet.

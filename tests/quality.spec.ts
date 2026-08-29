@@ -42,6 +42,30 @@ test('history, keyboard frame controls, and focus all work', async ({ page }) =>
   await expect(page).toHaveURL(/\/$/);
 });
 
+test('browser Back restores the previous route scroll position and focused control', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  });
+  const expectedScroll = await page.evaluate(() => {
+    document.querySelector<HTMLButtonElement>('#import-hero')?.focus();
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: 1_500, behavior: 'auto' });
+    const savedScroll = window.scrollY;
+    document.querySelector<HTMLAnchorElement>('header a[href="/privacy"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    return savedScroll;
+  });
+  expect(expectedScroll).toBeGreaterThan(0);
+  await expect(page).toHaveURL(/\/privacy$/);
+  await expect(page.locator('h1')).toBeFocused();
+
+  await page.goBack();
+  await expect(page).toHaveURL(/\/$/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(expectedScroll);
+  await expect(page.locator('#import-hero')).toBeFocused();
+});
+
 test('the first-screen sample action opens the isolated query-string demo in one click', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Try it with sample data' }).click();
@@ -49,6 +73,28 @@ test('the first-screen sample action opens the isolated query-string demo in one
   await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
   await expect(page.locator('h1')).toBeFocused();
 });
+
+for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+  test(`the demo shows its seeded canvas and frame controls without scrolling at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto('/?demo=1');
+    await expect(page.locator('#current-counter')).toHaveText('FRAME 03 / 06');
+    const bounds = await page.locator('#onion-canvas, #current-counter, #previous-frame, #next-frame').evaluateAll((elements) =>
+      elements.map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { id: element.id, top: rect.top, bottom: rect.bottom, height: rect.height };
+      })
+    );
+    const byId = Object.fromEntries(bounds.map((bound) => [bound.id, bound]));
+    expect(byId['onion-canvas'].top).toBeGreaterThanOrEqual(0);
+    expect(byId['onion-canvas'].height).toBeGreaterThanOrEqual(250);
+    expect(byId['onion-canvas'].bottom).toBeLessThanOrEqual(viewport.height);
+    for (const id of ['current-counter', 'previous-frame', 'next-frame']) {
+      expect(byId[id].top).toBeGreaterThanOrEqual(0);
+      expect(byId[id].bottom).toBeLessThanOrEqual(viewport.height);
+    }
+  });
+}
 
 test('the hero has no decorative lettering and keeps its useful description in HTML', async ({ page }) => {
   await page.goto('/');
@@ -65,6 +111,15 @@ test('the workbench fits a 390px phone without horizontal scrolling', async ({ p
   await page.goto('/demo');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
   await expect(page.getByRole('button', { name: /Export contact sheet/ })).toBeVisible();
+});
+
+test('the desktop first screen keeps all three product facts beside the primary action', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const facts = await page.locator('.fact-list').boundingBox();
+  expect(facts).not.toBeNull();
+  expect(facts!.y).toBeGreaterThanOrEqual(0);
+  expect(facts!.y + facts!.height).toBeLessThanOrEqual(900);
 });
 
 test('every visible landing-page link and button has a 44px touch target at 390px', async ({ page }) => {
@@ -119,7 +174,16 @@ test('unknown document routes return the designed page with a real HTTP 404', as
   const response = await page.goto('/definitely-missing');
   expect(response?.status()).toBe(404);
   await expect(page).toHaveTitle('Missing frame — Onion Next Frame');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('This frame is missing.');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('This frame is missing');
+  await expect(page.locator('header.site-header')).toHaveCount(1);
+  await expect(page.locator('footer.site-footer')).toHaveCount(1);
+  await expect(page.getByRole('link', { name: 'Privacy', exact: true })).toHaveCount(2);
+  await expect(page.getByRole('link', { name: 'Terms', exact: true })).toHaveCount(1);
+  await expect(page.getByRole('link', { name: 'Return home' })).toHaveCount(1);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Return home/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://onion-next-frame.sociobot.in/404.html');
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Missing frame — Onion Next Frame');
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '/favicon.svg');
 
   const deployedConfig = JSON.parse(await readFile('public/staticwebapp.config.json', 'utf8')) as {
     navigationFallback?: unknown;
@@ -232,5 +296,5 @@ test('service worker installs the current cache generation for updates', async (
   await page.goto('/demo');
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   const cacheNames = await page.evaluate(async () => caches.keys());
-  expect(cacheNames).toContain('onion-next-frame-v7');
+  expect(cacheNames).toContain('onion-next-frame-v8');
 });

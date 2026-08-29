@@ -1,6 +1,6 @@
 # Plain-language copy audit
 
-Audit date: 2026-08-29. Scope: every visible landing-page string plus the light table's dynamic status and error messages. Counts treat symbols and hyphenated terms as one word. No line exceeds 22 words. No banned marketing word appears.
+Audit date: 2026-08-29, polish round 3. Scope: every visible landing-page string plus the frame comparison's dynamic status and error messages. Counts treat symbols and hyphenated terms as one word. No line exceeds 22 words. No banned marketing word appears.
 
 ## Landing page
 
@@ -11,7 +11,7 @@ Audit date: 2026-08-29. Scope: every visible landing-page string plus the light 
 | Home | 1 | Pass |
 | Demo | 1 | Pass |
 | Privacy | 1 | Pass |
-| Ready offline | 2 | Pass |
+| Online / Ready offline / Offline mode | 1–2 | Pass |
 | Compare animation frames | 3 | Pass |
 | Compare the frames before and after | 6 | Pass |
 | For pixel artists checking motion between drawings without changing their main editor. | 11 | Pass |
@@ -26,11 +26,12 @@ Audit date: 2026-08-29. Scope: every visible landing-page string plus the light 
 | Check the in-between drawing | 5 | Pass |
 | Import numbered PNG files or one animated GIF. | 8 | Pass |
 | File names set the frame order. | 6 | Pass |
-| Your onion preview appears here. | 5 | Pass |
+| Your frame comparison appears here. | 5 | Pass |
 | Choose numbered PNG files or an animated GIF. | 8 | Pass |
 | Drop PNG or GIF files | 5 | Pass |
 | No sequence loaded | 3 | Pass |
 | Import frames or load the sample to start. | 8 | Pass |
+| Layers / Color / Opacity | 3 | Pass |
 | Show layer | 2 | Pass |
 | Opacity 28% | 2 | Pass |
 | Tint | 1 | Pass |
@@ -46,13 +47,13 @@ Audit date: 2026-08-29. Scope: every visible landing-page string plus the light 
 | Compare frames in three steps | 5 | Pass |
 | Import the sequence | 3 | Pass |
 | Select numbered PNG files or one animated GIF. | 8 | Pass |
-| Tune each neighbour | 3 | Pass |
+| Adjust the frame layers | 4 | Pass |
 | Set visibility, opacity, and tint for all three layers. | 9 | Pass |
-| Export the sheet | 3 | Pass |
+| Export a contact sheet | 4 | Pass |
 | Download one PNG with every source frame in order. | 9 | Pass |
 | Limits and privacy | 3 | Pass |
 | This is a reviewer, not an editor | 7 | Pass |
-| It does not paint, interpolate, host, or sync artwork. | 9 | Pass |
+| It does not include painting, frame generation, accounts, collaboration, or sync. | 11 | Pass |
 | Your browser decodes the images. | 5 | Pass |
 | The app stores your latest real sequence in this browser. | 10 | Pass |
 | Demo frames use memory only. | 5 | Pass |
@@ -111,16 +112,22 @@ File-specific errors add the failed file name before the audited instruction. Co
 | One imported drawing | frame |
 | Ordered set of drawings | sequence |
 | Previous/current/next overlay | layer |
-| Combined review canvas | onion preview |
+| Combined review canvas | frame comparison |
 | Downloaded overview PNG | contact sheet |
 | Portable saved review | project |
 | Seeded isolated experience | demo |
 | Browser persistence | saved |
 
-## README corrections
+## README audit
 
-- “Imports naturally sorted PNG sequences and animated GIF frames.” is covered by `sequence-import`.
+- “Imports numbered PNG files in number order and imports animated GIF frames.” is covered by `sequence-import`.
 - “Six original sample frames load immediately.” is covered by `sample-six-frame-demo`.
+- “Frame 3, its canvas, and frame controls open without scrolling.” is covered by `demo-first-viewport`.
+- “It does not include painting, frame generation, accounts, collaboration, or sync.” is covered by `scope-boundaries`.
+- “Real projects stay in this browser.” uses the visitor benefit instead of a storage API name.
+- “The demo banner remains visible while demo mode is active.” identifies the banner without colour alone.
+- “Open `/?demo=1` to load the sample.” names the result instead of an implementation term.
+- “Very large sequences can exceed this browser's storage limit.” names the consequence instead of a database API.
 - The compatibility note is actionable guidance, not a browser-support promise.
 - The test command describes the suite without a stale test count.
 - The README introduction says who the tool is for and what it compares without using “review surface.”
@@ -132,4 +139,4 @@ The checked-in source and responsive WebP derivatives were visually inspected on
 
 ## Catalog description
 
-“Compare a pixel animation with its previous and next frames.” has 9 words and 60 characters. It starts with a verb.
+“Compare animation frames in your browser before exporting a contact sheet.” has 10 words and starts with a verb.

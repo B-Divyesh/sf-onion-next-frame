@@ -2,13 +2,13 @@
 
 Compare a pixel animation with its previous and next frames.
 
-Onion Next Frame helps solo pixel artists and small game teams compare nearby animation frames beside their main editor. It does not add painting, hosting, collaboration, or generated frames.
+Onion Next Frame helps solo pixel artists and small game teams compare nearby animation frames beside their main editor. It does not include painting, frame generation, accounts, collaboration, or sync.
 
 Live site: <https://onion-next-frame.sociobot.in>
 
 ## What it does
 
-- Imports naturally sorted PNG sequences and animated GIF frames.
+- Imports numbered PNG files in number order and imports animated GIF frames.
 - Shows previous, current, and next drawings on one canvas.
 - Gives each layer its own visibility, opacity, and tint controls.
 - Exports every source frame in one PNG contact sheet.
@@ -16,11 +16,11 @@ Live site: <https://onion-next-frame.sociobot.in>
 - Restores the latest real sequence from browser storage after a reload.
 - Works offline after the first successful visit.
 
-Images stay on the device. There is no account, upload, analytics, advertising, or payment gate. Real projects use IndexedDB. The sample demo uses memory only.
+Images stay on the device. There is no account, upload, analytics, advertising, or payment gate. Real projects stay in this browser. The sample demo uses memory only.
 
 ## Try the isolated demo
 
-Open `/?demo=1` or <https://onion-next-frame.sociobot.in/?demo=1>. Six original sample frames load immediately. The cyan banner remains visible while demo mode is active. **Reset demo** restores the sample. **Start for real** discards it and returns to an empty or previously saved project. `/demo` remains available as a short link.
+Open `/?demo=1` or <https://onion-next-frame.sociobot.in/?demo=1>. Six original sample frames load immediately. The demo banner remains visible while demo mode is active. **Reset demo** restores the sample. **Start for real** discards it and returns to an empty or previously saved project. `/demo` remains available as a short link.
 
 Demo details and its storage boundary are in [`.factory/demo.md`](.factory/demo.md). Every product claim and its browser test are in [`.factory/claims.json`](.factory/claims.json).
 
@@ -33,7 +33,7 @@ npm install
 npm run dev
 ```
 
-Vite prints the local URL. Open `/?demo=1` for the seeded path.
+Vite prints the local URL. Open `/?demo=1` to load the sample.
 
 ## Test and build
 
@@ -52,7 +52,7 @@ Upload `dist/` to the static host. `staticwebapp.config.json` provides the histo
 
 ## Browser notes
 
-If PNG import fails, update your browser or use a current desktop browser. If a GIF fails to import, export its frames as numbered PNG files. Very large sequences can reach the browser's IndexedDB quota; original source files remain the backup.
+If PNG import fails, update your browser or use a current desktop browser. If a GIF fails to import, export its frames as numbered PNG files. Very large sequences can exceed this browser's storage limit; original source files remain the backup.
 
 ## Product records
 

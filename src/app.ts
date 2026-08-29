@@ -29,6 +29,11 @@ const descriptions: Record<Route, string> = {
 
 let cleanupTool: (() => void) | undefined;
 
+type HistoryEntry = {
+  scrollY?: number;
+  focusSelector?: string;
+};
+
 function routeFromPath(path: string): Route {
   if (path === '/' || path === '/demo' || path === '/privacy' || path === '/terms') return path;
   return '/404';
@@ -45,7 +50,7 @@ function shell(content: string, demo = false): string {
         <a href="/demo" data-nav>Demo</a>
         <a href="/privacy" data-nav>Privacy</a>
       </nav>
-      <span class="offline-indicator" id="network-state" role="status">Ready offline</span>
+      <span class="offline-indicator" id="network-state" role="status">Online</span>
     </header>
     <main id="main">${content}</main>
     <footer class="site-footer">
@@ -70,7 +75,7 @@ function homePage(): string {
           <a class="key key-primary" href="/?demo=1" data-nav>Try it with sample data</a>
           <span>Loads a 6-frame run cycle.</span>
         </div>
-        <button class="import-link" type="button" data-open-import>Import your frames</button>
+        <button class="import-link" id="import-hero" type="button" data-open-import>Import your frames</button>
         <ul class="fact-list" aria-label="Product facts">
           <li><span aria-hidden="true">◇</span> Free to use</li>
           <li><span aria-hidden="true">◇</span> Works offline after the first visit</li>
@@ -93,16 +98,13 @@ function homePage(): string {
 
 function demoPage(): string {
   return shell(`
-    <section class="demo-intro section-grid">
-      <div class="section-number" aria-hidden="true">DE—MO</div>
+    <section class="demo-compact" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">Six sample drawings are loaded</p>
         <h1 id="page-title" tabindex="-1">Compare the frames before and after</h1>
-        <p class="lede">Move through the run cycle. Change each layer, then export its contact sheet.</p>
+        <p class="lede">Six sample frames are loaded. Move through the run cycle or change a layer.</p>
       </div>
     </section>
     ${toolSection(true)}
-    ${howItWorks()}
     ${operatorNote()}
   `, true);
 }
@@ -118,18 +120,21 @@ function layerControl(key: keyof ViewerSettings, label: string, shortcut: string
 }
 
 function toolSection(demo: boolean): string {
-  return `<section class="light-table-section" id="light-table" aria-labelledby="tool-heading">
-    <div class="tool-heading section-grid">
+  const heading = demo
+    ? `<div class="demo-tool-heading"><h2 id="tool-heading">Sample frame comparison</h2><p>Frame 03 is ready with its previous and next frames.</p></div>`
+    : `<div class="tool-heading section-grid">
       <div class="section-number" aria-hidden="true">01—06</div>
       <div><p class="eyebrow">Frame comparison preview</p><h2 id="tool-heading">Check the in-between drawing</h2><p>Import numbered PNG files or one animated GIF. File names set the frame order.</p></div>
-    </div>
+    </div>`;
+  return `<section class="light-table-section" id="light-table" aria-labelledby="tool-heading">
+    ${heading}
     <div class="workbench ${demo ? 'is-demo' : ''}">
       <div class="viewport-column">
         <div class="drop-zone" id="drop-zone">
           <canvas id="onion-canvas" width="720" height="520" role="img" aria-label="No frames loaded"></canvas>
           <div class="empty-state" id="empty-state">
             <span class="empty-frame" aria-hidden="true">＋</span>
-            <strong>Your onion preview appears here.</strong>
+            <strong>Your frame comparison appears here.</strong>
             <span>Choose numbered PNG files or an animated GIF.</span>
             <button class="key key-primary" type="button" data-open-import>Import your frames</button>
           </div>
@@ -147,7 +152,7 @@ function toolSection(demo: boolean): string {
         <p class="viewer-status" id="viewer-status" role="status">Import frames or load the sample to start.</p>
       </div>
       <aside class="console" aria-label="Onion layer settings">
-        <div class="console-top"><span>LAYERS</span><span>RGB / ALPHA</span></div>
+        <div class="console-top"><span>LAYERS</span><span>COLOR / OPACITY</span></div>
         ${layerControl('previous', 'Previous frame', '←')}
         ${layerControl('current', 'Current frame', '•')}
         ${layerControl('next', 'Next frame', '→')}
@@ -169,8 +174,8 @@ function howItWorks(): string {
     <div><p class="eyebrow">How it works</p><h2 id="how-heading">Compare frames in three steps</h2>
       <ol class="frame-steps">
         <li><span>01</span><div><h3>Import the sequence</h3><p>Select numbered PNG files or one animated GIF.</p></div></li>
-        <li><span>02</span><div><h3>Tune each neighbour</h3><p>Set visibility, opacity, and tint for all three layers.</p></div></li>
-        <li><span>03</span><div><h3>Export the sheet</h3><p>Download one PNG with every source frame in order.</p></div></li>
+        <li><span>02</span><div><h3>Adjust the frame layers</h3><p>Set visibility, opacity, and tint for all three layers.</p></div></li>
+        <li><span>03</span><div><h3>Export a contact sheet</h3><p>Download one PNG with every source frame in order.</p></div></li>
       </ol>
     </div>
   </section>`;
@@ -179,20 +184,20 @@ function howItWorks(): string {
 function operatorNote(): string {
   return `<section class="note-section section-grid" aria-labelledby="note-heading">
     <div class="section-number" aria-hidden="true">LOCAL</div>
-    <div class="operator-note"><p class="eyebrow">Limits and privacy</p><h2 id="note-heading">This is a reviewer, not an editor</h2><p>It does not paint, interpolate, host, or sync artwork.</p><p>Your browser decodes the images. The app stores your latest real sequence in this browser. Demo frames use memory only.</p><a href="/privacy" data-nav>Read the privacy details</a></div>
+    <div class="operator-note"><p class="eyebrow">Limits and privacy</p><h2 id="note-heading">This is a reviewer, not an editor</h2><p>It does not include painting, frame generation, accounts, collaboration, or sync.</p><p>Your browser decodes the images. The app stores your latest real sequence in this browser. Demo frames use memory only.</p><a href="/privacy" data-nav>Read the privacy details</a></div>
   </section>`;
 }
 
 function privacyPage(): string {
-  return shell(`<article class="legal-page"><p class="eyebrow">Privacy</p><h1 id="page-title" tabindex="-1">Your drawings stay in your browser</h1><p class="lede">Onion Next Frame has no account, server upload, analytics, or advertising.</p><h2>Files you import</h2><p>Your browser decodes PNG and GIF files on this device. The app stores the latest real sequence in IndexedDB so it can survive a reload.</p><h2>Demo data</h2><p>The demo builds six sample frames in memory. It does not read or write your saved sequence.</p><h2>Network use</h2><p>The service worker downloads and caches the app files. The app sends no artwork or usage data anywhere.</p><h2>Remove local data</h2><p>Choose “Clear sequence” in the light table. You can also clear this site's storage in your browser settings.</p><p>Last updated: 28 August 2026.</p></article>`);
+  return shell(`<article class="legal-page"><p class="eyebrow">Privacy</p><h1 id="page-title" tabindex="-1">Your drawings stay in your browser</h1><p class="lede">Onion Next Frame has no account, server upload, analytics, or advertising.</p><h2>Files you import</h2><p>Your browser decodes PNG and GIF files on this device. The app keeps the latest real sequence in this browser so it survives a reload.</p><h2>Demo data</h2><p>The demo builds six sample frames in memory. It does not read or write your saved sequence.</p><h2>Network use</h2><p>The app downloads and caches its own files for offline use. It sends no artwork or usage data anywhere.</p><h2>Remove local data</h2><p>Choose “Clear sequence” in the frame comparison. You can also clear this site's storage in your browser settings.</p><p>Last updated: 28 August 2026.</p></article>`);
 }
 
 function termsPage(): string {
-  return shell(`<article class="legal-page"><p class="eyebrow">Terms</p><h1 id="page-title" tabindex="-1">Use the tool on artwork you control</h1><p class="lede">Onion Next Frame is a free reference tool. It is not a painting editor or recovery service.</p><h2>Your responsibility</h2><p>Only open artwork that you have permission to use. Keep a separate copy of every source file.</p><h2>No warranty</h2><p>The software is provided “as is” under the MIT License. Browser support and GIF decoding can vary.</p><h2>Acceptable use</h2><p>Do not use the site to break laws or interfere with the service.</p><h2>Changes</h2><p>These terms may change with a new product version. The date below records this version.</p><p>Last updated: 28 August 2026.</p></article>`);
+  return shell(`<article class="legal-page"><p class="eyebrow">Terms</p><h1 id="page-title" tabindex="-1">Use the tool on artwork you control</h1><p class="lede">Onion Next Frame is a free reference tool. It does not include painting, frame generation, accounts, collaboration, or sync.</p><h2>Your responsibility</h2><p>Only open artwork that you have permission to use. Keep a separate copy of every source file.</p><h2>No warranty</h2><p>The software is provided “as is” under the MIT License. Browser support and GIF decoding can vary.</p><h2>Acceptable use</h2><p>Do not use the site to break laws or interfere with the service.</p><h2>Changes</h2><p>These terms may change with a new product version. The date below records this version.</p><p>Last updated: 28 August 2026.</p></article>`);
 }
 
 function missingPage(): string {
-  return shell(`<section class="missing-page"><p class="eyebrow">FRAME — —</p><div class="missing-slot"><h1 id="page-title" tabindex="-1">This frame is missing</h1><p>The address does not point to a page.</p><a class="key key-primary" href="/" data-nav>Return to the light table</a></div></section>`);
+  return shell(`<section class="missing-page"><p class="eyebrow">FRAME — —</p><div class="missing-slot"><h1 id="page-title" tabindex="-1">This frame is missing</h1><p>The address does not point to a page.</p><a class="key key-primary" href="/" data-nav>Return home</a></div></section>`);
 }
 
 function copySettings(settings: ViewerSettings = defaults): ViewerSettings {
@@ -669,14 +674,53 @@ async function initializeTool(demo: boolean): Promise<() => void> {
   };
 }
 
+function focusSelectorFor(element: Element | null): string | undefined {
+  if (!(element instanceof HTMLElement)) return;
+  if (element.id) return `#${element.id}`;
+
+  const field = element.getAttribute('data-field');
+  const layer = element.closest<HTMLElement>('[data-layer]')?.dataset.layer;
+  if (field && layer) return `[data-layer="${layer}"] [data-field="${field}"]`;
+
+  if (element.matches('a[data-nav]')) {
+    const href = element.getAttribute('href');
+    if (href) return `a[data-nav][href="${href}"]`;
+  }
+}
+
+function saveCurrentHistoryEntry(): void {
+  const entry: HistoryEntry = {
+    ...(history.state as HistoryEntry | null ?? {}),
+    scrollY: window.scrollY,
+    focusSelector: focusSelectorFor(document.activeElement)
+  };
+  history.replaceState(entry, '', location.href);
+}
+
+function restoreHistoryEntry(entry: HistoryEntry | null): void {
+  const scrollY = typeof entry?.scrollY === 'number' ? entry.scrollY : 0;
+  const restore = () => {
+    const previousBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: scrollY, behavior: 'auto' });
+    document.documentElement.style.scrollBehavior = previousBehavior;
+    const focusTarget = entry?.focusSelector ? document.querySelector<HTMLElement>(entry.focusSelector) : undefined;
+    (focusTarget ?? document.querySelector<HTMLElement>('#page-title'))?.focus({ preventScroll: true });
+  };
+  // Browsers may perform their own history scroll after popstate. Wait for
+  // that restoration before applying the product's saved route state.
+  requestAnimationFrame(() => requestAnimationFrame(restore));
+}
+
 function bindNavigation(): void {
   document.querySelectorAll<HTMLAnchorElement>('a[data-nav]').forEach((link) => {
     link.addEventListener('click', (event) => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
       const target = new URL(link.href);
-      history.pushState({}, '', `${target.pathname}${target.search}${target.hash}`);
-      void render(true);
+      saveCurrentHistoryEntry();
+      history.pushState({ scrollY: 0, focusSelector: '#page-title' } satisfies HistoryEntry, '', `${target.pathname}${target.search}${target.hash}`);
+      void render('forward');
     });
   });
 }
@@ -684,11 +728,29 @@ function bindNavigation(): void {
 function updateNetworkState(): void {
   const element = document.querySelector<HTMLElement>('#network-state');
   if (!element) return;
-  element.textContent = navigator.onLine ? 'Ready offline' : 'Offline mode';
-  element.classList.toggle('is-offline', !navigator.onLine);
+  if (!navigator.onLine) {
+    element.textContent = 'Offline mode';
+    element.classList.remove('is-ready');
+    element.classList.add('is-offline');
+    return;
+  }
+
+  element.textContent = 'Online';
+  element.classList.remove('is-ready', 'is-offline');
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(() => {
+      const current = document.querySelector<HTMLElement>('#network-state');
+      if (!current || !navigator.onLine) return;
+      current.textContent = 'Ready offline';
+      current.classList.remove('is-offline');
+      current.classList.add('is-ready');
+    }).catch(() => {
+      // A blocked registration leaves the truthful online state in place.
+    });
+  }
 }
 
-export async function render(moveFocus = false): Promise<void> {
+export async function render(navigation: 'initial' | 'forward' | 'history' = 'initial', historyEntry: HistoryEntry | null = null): Promise<void> {
   cleanupTool?.();
   cleanupTool = undefined;
   const requestedRoute = routeFromPath(location.pathname.replace(/\/$/, '') || '/');
@@ -716,13 +778,16 @@ export async function render(moveFocus = false): Promise<void> {
   if (route === '/' || route === '/demo') cleanupTool = await initializeTool(route === '/demo');
   const heading = document.querySelector<HTMLElement>('h1');
   document.querySelector<HTMLElement>('.route-announcer')!.textContent = heading?.textContent ?? '';
-  if (moveFocus) {
+  if (navigation === 'forward') {
     window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     heading?.focus({ preventScroll: true });
+  } else if (navigation === 'history') {
+    restoreHistoryEntry(historyEntry);
   }
 }
 
-window.addEventListener('popstate', () => void render(true));
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.addEventListener('popstate', (event) => void render('history', event.state as HistoryEntry | null));
 window.addEventListener('online', updateNetworkState);
 window.addEventListener('offline', updateNetworkState);
 

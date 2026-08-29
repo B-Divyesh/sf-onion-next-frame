@@ -2,7 +2,7 @@
   {
     "id": "demo-sandbox",
     "claim": "The sample demo saves nothing and does not read the real project",
-    "where": "demo banner, privacy page, README",
+    "where": "demo banner, landing limits section, privacy page, README, demo documentation",
     "test": "npm test -- --grep @claim:demo-sandbox",
     "sandbox": "fresh browser context at /?demo=1; assert the banner, no app IndexedDB, and reset restores defaults"
   },
@@ -14,11 +14,25 @@
     "sandbox": "fresh browser context at /?demo=1; assert the frame counter, six frame controls, and loaded status"
   },
   {
+    "id": "demo-first-viewport",
+    "claim": "The demo opens with frame 03, its comparison canvas, and frame controls visible without scrolling",
+    "where": "demo route, demo documentation",
+    "test": "npm test -- --grep @claim:demo-first-viewport",
+    "sandbox": "fresh browser contexts at 390×844 and 1440×900; assert the seeded canvas, frame counter, and previous/next controls are inside each viewport"
+  },
+  {
     "id": "sequence-import",
     "claim": "Imports numbered PNG files in natural filename order and animated GIF frames",
     "where": "landing light-table introduction, tool empty state, how it works, README",
     "test": "npm test -- --grep @claim:sequence-import",
     "sandbox": "fresh browser context; import out-of-order PNG fixtures and a two-frame GIF fixture"
+  },
+  {
+    "id": "scope-boundaries",
+    "claim": "Does not include painting, frame generation, accounts, collaboration, or sync",
+    "where": "landing limits section, README, terms page",
+    "test": "npm test -- --grep @claim:scope-boundaries",
+    "sandbox": "fresh demo context; assert the shipped interface has only local frame-review controls, no editable painting surface, account fields, collaboration controls, or remote-sync requests"
   },
   {
     "id": "drag-drop-import",
@@ -30,7 +44,7 @@
   {
     "id": "three-layer-preview",
     "claim": "Shows previous, current, and next frames with independent layer controls",
-    "where": "viewer and how it works, README",
+    "where": "landing hero, viewer, how it works, README",
     "test": "npm test -- --grep @claim:three-layer-preview",
     "sandbox": "demo data; assert three controls, neighbour labels, and changed canvas pixels after an opacity adjustment"
   },
@@ -65,14 +79,14 @@
   {
     "id": "offline-reload",
     "claim": "Works offline after the first visit",
-    "where": "landing facts, README",
+    "where": "landing facts, header status, privacy page, offline fallback, README",
     "test": "npm test -- --grep @claim:offline-reload",
-    "sandbox": "fresh browser context at /demo; wait for the service worker, reload under offline mode, and assert the sample viewer works"
+    "sandbox": "fresh browser contexts at /demo; assert Online before a blocked registration, Ready offline after service-worker readiness, then reload under offline mode and assert the sample viewer works"
   },
   {
     "id": "local-restore",
     "claim": "Restores the latest real sequence after a reload",
-    "where": "privacy page, README",
+    "where": "landing limits section, privacy page, README",
     "test": "npm test -- --grep @claim:local-restore",
     "sandbox": "fresh browser context; import two PNG files, wait for IndexedDB, reload, and assert both frames return"
   },
