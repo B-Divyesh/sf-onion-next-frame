@@ -76,6 +76,7 @@ try {
   await page.waitForFunction(() => document.querySelector('#viewer-status')?.textContent !== 'Reading frames in this browser…');
   const corruptGif = await page.locator('#viewer-status').innerText();
   await input.setInputFiles({ name: 'two-frame.gif', mimeType: 'image/gif', buffer: gif });
+  await page.waitForFunction(() => document.querySelector('#viewer-status')?.textContent === 'Loaded 2 frames.');
   const gifRecovery = await page.locator('#viewer-status').innerText();
   await input.setInputFiles({ name: 'single.png', mimeType: 'image/png', buffer: png });
   await page.waitForTimeout(300);

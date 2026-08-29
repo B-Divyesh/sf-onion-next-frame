@@ -1,0 +1,29 @@
+{
+  "base": "https://onion-next-frame.sociobot.in",
+  "checkedFiles": 31,
+  "mismatches": [],
+  "indexSha256": "aa76f6e244fbfdcacd82fb6afddac82dacf53de4322607826dc2f9ec713fb9bc",
+  "emittedJavaScript": {
+    "path": "/assets/index-BWi0FSxo.js",
+    "status": 200,
+    "localSha256": "52a15c485a7641085d50c8a7307859c876bdaa6c5eff2e0800ab144d09ef38d8",
+    "liveSha256": "52a15c485a7641085d50c8a7307859c876bdaa6c5eff2e0800ab144d09ef38d8"
+  },
+  "serviceWorkerCache": "onion-next-frame-v5",
+  "mainStatus": 200,
+  "securityHeaders": {
+    "cache-control": "public, must-revalidate, max-age=30",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "permissions-policy": "camera=(), microphone=(), geolocation=()",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "strict-transport-security": "max-age=10886400; includeSubDomains; preload",
+    "x-content-type-options": "nosniff"
+  },
+  "imageCache": {
+    "/assets/hero-640.webp": "public, max-age=0, must-revalidate",
+    "/assets/hero-1200.webp": "public, max-age=0, must-revalidate",
+    "/assets/onion-next-frame-og.webp": "public, max-age=0, must-revalidate"
+  },
+  "hashedAssetCache": "public, max-age=31536000, immutable",
+  "missingDocumentStatus": 404
+}

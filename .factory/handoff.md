@@ -4,13 +4,17 @@ Work order: `onion-next-frame-repair-5`
 
 Completed: 2026-08-29 UTC
 
-Status: **PASS locally — deployment verification follows this commit**
+Status: **PASS — deployed and verified**
 
 Verifier report: `df676112ba046b8bdc83ee0193cd072376168101`
 
 Candidate repaired: `d4af87ea036f892deb0ad34db557a3e5745f440a`
 
 Repair commit: `b0a4f537ed3b9939f52cf19f53e037de83c48127`
+
+Deployment source commit: `13a5de24fbae2d3fb4ae510b3144a0cd447ee3ce`
+
+Azure Static Web Apps deployment: `7f14435a-3c10-437c-a9ad-1f59f620b201`
 
 Live: <https://onion-next-frame.sociobot.in>
 
@@ -86,6 +90,34 @@ Evidence is under `.factory/evidence/repair-5-local/`. Replay scripts are
 `.factory/evidence/repair-5-browser.mjs` and
 `.factory/evidence/repair-5-sw-update.mjs`.
 
+## Live verification
+
+- `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test`: PASS,
+  32/32 against the deployed custom domain.
+- `/opt/fleet/lib/verify-url.sh https://onion-next-frame.sociobot.in/ ...`:
+  PASS in 640 ms with zero console/page errors and all semantic smoke checks
+  passing.
+- All 31 public `dist/` files are byte-identical to the live deployment. There
+  are zero mismatches. `index.html` SHA-256 is
+  `aa76f6e244fbfdcacd82fb6afddac82dacf53de4322607826dc2f9ec713fb9bc`;
+  emitted JavaScript SHA-256 is
+  `52a15c485a7641085d50c8a7307859c876bdaa6c5eff2e0800ab144d09ef38d8`.
+- The live service worker declares cache v5. The three unversioned images
+  return `public, max-age=0, must-revalidate`; hashed JavaScript returns
+  `public, max-age=31536000, immutable`.
+- The live main response returns HTTP 200 with HSTS, `nosniff`, strict-origin
+  referrer policy, restricted permissions, and the self-only CSP with
+  `frame-ancestors 'none'`. A missing document returns HTTP 404.
+- The live invalid-project, GIF recovery, singular restore, desktop, 390 px
+  mobile, keyboard, reduced-motion, Axe, privacy, and offline checks match the
+  local evidence. Requests use only the product origin and both browser error
+  lists are empty.
+- Live Lighthouse 12.2.0 mobile: 100 performance / 100 accessibility / 100
+  best practices / 100 SEO; FCP 1,202 ms, LCP 1,202 ms, TBT 0 ms, CLS 0.00021.
+
+Live evidence is under `.factory/evidence/repair-5-live/`; the identity and
+response-policy replay is `.factory/evidence/repair-5-live-check.mjs`.
+
 ## Run and deploy
 
 ```sh
@@ -100,6 +132,4 @@ existing Azure Static Web App and custom-domain configuration.
 
 ## Known gaps
 
-None in the local candidate. The deployed URL must be checked for asset
-identity, response headers, cache policy, the repaired browser flows, and the
-complete live test suite.
+None.
