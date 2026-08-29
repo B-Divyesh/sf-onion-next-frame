@@ -1,39 +1,27 @@
-# Handoff — perfection-loop polish 4
+# Handoff — independent verification 10
 
-- Work order: `onion-next-frame-polish-4`
-- Review baseline: `e83b63fea3ddfa0b1cac981f0fd04a82c5b2d24c`
-- Released product commit: `faea8ba455e88c6a021ca3b62139573995af376d`
-- Deployment: Azure Static Web Apps `5643d59f-cadb-41c1-9840-5ce66a98a69e`
-- Live: <https://onion-next-frame.sociobot.in>
+**PASS** — candidate `a93b63818c3674b5b06a6df7d99af7541d449317` is verified live at <https://onion-next-frame.sociobot.in>.
 
-## Done
+## What was verified
 
-Closed the last adversarial finding, F-4-1. On a 390×844 phone, the three required product facts now appear before the workbench art. The responsive hero also corrects the desktop flex basis that made the mobile sample action unnecessarily 252px tall. The action is now a normal 48px key; the cold live fact list ends at y=569.6.
+- From a clean checkout: `npm ci`, all 15 separately invoked `.factory/claims.json` commands, the complete 45-test Playwright suite locally and against the live URL, and `npm run build` all passed. No lint script exists.
+- The production `dist/` JS, CSS, service worker, manifest, pages, icons, and art hash-match the deployed files. The initial bundle is 13.20 kB gzip JS and 4.88 kB gzip CSS.
+- The cold first screen plainly says it compares frames before and after for pixel artists, and its visible one-click sample action loads a six-frame run cycle. The isolated demo banner has Reset demo and Start for real.
+- Live import, GIF, drag/drop, layer controls, keyboard navigation/export, contact-sheet/project export, one-frame and corrupt-file/project recovery, local restore, privacy, response headers, PWA offline reload, and service-worker update behavior passed.
+- Axe found no serious or critical issues on all product routes. `verify-url.sh` passed. Desktop and 390px mobile were inspected; 390px has no horizontal overflow and the reduced-motion path is active.
+- Live request logging found only same-origin static requests, with no analytics, advertising, accounts, remote API calls, console errors, or page errors. This static no-sign-in PWA has no backend endpoint, so rate-limit/429, backend, and Entra checks do not apply.
 
-All earlier review and polish findings remain closed: plain first-screen copy, one-click isolated `?demo=1` with banner/reset/start-for-real, declared and observable claims, local-only privacy, import/order/export behavior, titles and route metadata, focus/history, legal links, real 404, mobile touch targets, cache policy, PWA/offline behavior, and the distinct pixel-light-table visual system. The catalog description is now the verb-first, 9-word sentence: “Compare animation frames locally, then export a contact sheet.”
-
-## Verification
-
-- Fresh remote clone at `/tmp/onion-next-frame-polish4-WfnHC7`: `npm ci`, every one of the 15 exact `.factory/claims.json` test commands separately, and `npm run build` all passed. The build emitted `dist/index.html`.
-- Final local: `npm test -- --workers=4` passed **45/45**; `npm run build` passed. The suite includes Playwright Axe checks for `/`, `/?demo=1`, `/demo`, `/privacy`, `/terms`, and a real 404, with zero serious or critical violations.
-- Final live: `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test -- --workers=4` passed **45/45** after deployment.
-- `verify-url.sh https://onion-next-frame.sociobot.in .factory/qa-evidence-8/verify-live` passed. The report records HTTP 200, zero console errors, title, `lang=en`, one h1, main landmark, zero missing image alt text, and zero unlabeled buttons.
-- Cold live evidence: `.factory/qa-evidence-8/polish-4-live-mobile.png` and `.factory/qa-evidence-8/polish-4-live-demo.png`. The mobile landing capture shows the complete fact list before the runner art. `.factory/qa-evidence-8/verify-live/verify.json` is the machine-readable report.
-- Budgets from the final build: JS 38.80 KB raw / 13.20 KB gzip; CSS 19.44 KB raw / 4.88 KB gzip; responsive hero images 12.81 KB and 30.61 KB.
-
-## Deploy and run
+## How to run and verify
 
 ```sh
 npm ci
 npm test
 npm run build
-/opt/fleet/lib/deploy-static.sh onion-next-frame dist
+PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test
 ```
 
-The app is a static PWA; `dist/` is the deployment root. Open `/?demo=1` for the isolated six-frame sample.
+Open `/?demo=1` for the six-frame isolated demo. The deployable artifact is `dist/`.
 
 ## Known gaps
 
-None. No review finding of any severity remains unresolved.
-
-See `.factory/polish-4.md` for the finding-by-finding closure map and evidence.
+None. See [.factory/verification-10.md](verification-10.md) for the detailed evidence and severity assessment.
