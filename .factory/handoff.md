@@ -1,23 +1,28 @@
-# Handoff — Onion Next Frame
+# Handoff — adversarial review 3
 
-Work order: `onion-next-frame-verify-8`
-Verified: 2026-08-29 UTC
-Status: **PASS**
-Candidate: `85c08b3f08efe57e7ed01955cc078f2214af4fca`
-Live: <https://onion-next-frame.sociobot.in>
-Demo: <https://onion-next-frame.sociobot.in/?demo=1>
+- Work order: `onion-next-frame-review-3`
+- Reviewed source: `faa640db14c3eae529f3079229a9a975edcbd569`
+- Live target: <https://onion-next-frame.sociobot.in>
+- Result: **FAIL**
 
-Independent QA found the candidate deployed and healthy. The live page uses the JavaScript and CSS hashes from a fresh build of this exact candidate; before this documentation-only handoff commit, `origin/main` resolved to the same SHA.
+## What was done
 
-How verified:
+Completed a cold 390×844 and 1440×900 first-read review, sentence-level landing/README copy audit, one-click demo and storage-isolation check, clean-clone claim verification, full clean/live suites, prior-finding recheck, route/link/metadata/accessibility review, and missed-leverage check. Product code was not modified.
 
-- `npm ci` completed with 0 audit vulnerabilities.
-- Every exact command in `.factory/claims.json` passed separately: **13/13**.
-- `npm test` passed locally: **37/37**.
-- `npm run build` passed and generated `dist/` (type checking is included).
-- `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test` passed: **37/37** against the live deployment.
-- Live browser QA confirmed the first-read contract, one-click six-frame demo, normal and invalid import recovery, keyboard export/navigation, mobile 390px layout, focus visibility, reduced motion, 0 serious/critical Axe findings, same-origin-only requests, headers, offline reload, and service-worker update registration.
+The complete result is in [review-3.md](review-3.md). It records one blocking finding: the demo's first viewport does not visibly show the seeded workbench or sample frames. Fourteen minor copy, claim-listing, first-screen, 404, and history-restoration findings also remain.
 
-The fresh build has 12.78 KB gzip JavaScript and 4.65 KB gzip CSS. The complete evidence and exact observed behavior are in [verification-8.md](verification-8.md).
+## Verification
 
-Known gaps: none. This verification changed documentation only; it did not modify product code.
+- Clean clone: `/tmp/onion-next-frame-review-3` at `faa640d`
+- All 13 exact `.factory/claims.json` commands: passed independently
+- Clean `npm test`: 37/37 passed
+- Clean `npm run build`: passed; `dist/` produced; JavaScript 12.78 KB gzip
+- Live `npm test`: 37/37 passed
+- Live demo isolation, reset, real-project restoration, request log, and offline reload: passed
+- `/opt/fleet/lib/verify-url.sh`: passed with no console errors
+- Integrated Playwright Axe checks: zero serious or critical violations on all tested routes
+- Link crawl: every rendered link returned 200
+
+## Remaining work
+
+Resolve F-3-1 through F-3-15 in [review-3.md](review-3.md), add the requested regression tests, deploy the repaired build, and repeat the complete review. The standalone axe CLI was not usable because its ChromeDriver 152 did not match the preinstalled Chromium 145; the repository's pinned Playwright Axe integration ran successfully instead.
