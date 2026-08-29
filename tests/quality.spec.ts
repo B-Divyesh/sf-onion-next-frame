@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 for (const [route, title] of [
   ['/', 'Onion Next Frame — Compare animation frames'],
+  ['/?demo=1', 'Demo — Onion Next Frame'],
   ['/demo', 'Demo — Onion Next Frame'],
   ['/privacy', 'Privacy — Onion Next Frame'],
   ['/terms', 'Terms — Onion Next Frame'],
@@ -33,6 +34,14 @@ test('history, keyboard frame controls, and focus all work', async ({ page }) =>
   await expect(page.locator('#current-counter')).toHaveText('FRAME 04 / 06');
   await page.goBack();
   await expect(page).toHaveURL(/\/$/);
+});
+
+test('the first-screen sample action opens the isolated query-string demo in one click', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Try it with sample data' }).click();
+  await expect(page).toHaveURL(/\?demo=1$/);
+  await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
+  await expect(page.locator('h1')).toBeFocused();
 });
 
 test('the workbench fits a 390px phone without horizontal scrolling', async ({ page }) => {
@@ -66,6 +75,16 @@ test('metadata, manifest, and original social image are reachable', async ({ pag
   for (const path of ['/manifest.webmanifest', '/assets/onion-next-frame-og.webp', '/robots.txt', '/sitemap.xml']) {
     expect((await request.get(path)).ok()).toBeTruthy();
   }
+});
+
+test('route metadata updates with client-side navigation', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Privacy', exact: true }).first().click();
+  await expect(page).toHaveTitle('Privacy — Onion Next Frame');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://onion-next-frame.sociobot.in/privacy');
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Privacy — Onion Next Frame');
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', 'https://onion-next-frame.sociobot.in/privacy');
+  await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', 'Privacy — Onion Next Frame');
 });
 
 test('strict CSP loads only same-origin emitted font assets without console errors', async ({ page }) => {
@@ -127,5 +146,5 @@ test('service worker installs the current cache generation for updates', async (
   await page.goto('/demo');
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   const cacheNames = await page.evaluate(async () => caches.keys());
-  expect(cacheNames).toContain('onion-next-frame-v2');
+  expect(cacheNames).toContain('onion-next-frame-v3');
 });

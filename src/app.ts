@@ -63,11 +63,11 @@ function homePage(): string {
     <section class="hero section-grid" aria-labelledby="page-title">
       <div class="section-number" aria-hidden="true">00—01</div>
       <div class="hero-copy">
-        <p class="eyebrow">A light table for frame sequences</p>
+        <p class="eyebrow">Compare animation frames</p>
         <h1 id="page-title" tabindex="-1">Compare the frames before and after</h1>
         <p class="lede">For pixel artists checking motion between drawings without changing their main editor.</p>
         <div class="hero-actions">
-          <a class="key key-primary" href="/demo" data-nav>Try it with sample data</a>
+          <a class="key key-primary" href="/?demo=1" data-nav>Try it with sample data</a>
           <span>Loads a 6-frame run cycle.</span>
         </div>
         <button class="import-link" type="button" data-open-import>Import your frames</button>
@@ -121,7 +121,7 @@ function toolSection(demo: boolean): string {
   return `<section class="light-table-section" id="light-table" aria-labelledby="tool-heading">
     <div class="tool-heading section-grid">
       <div class="section-number" aria-hidden="true">01—06</div>
-      <div><p class="eyebrow">Live onion preview</p><h2 id="tool-heading">Check the in-between drawing</h2><p>Import numbered PNG files or one animated GIF. File names set the frame order.</p></div>
+      <div><p class="eyebrow">Frame comparison preview</p><h2 id="tool-heading">Check the in-between drawing</h2><p>Import numbered PNG files or one animated GIF. File names set the frame order.</p></div>
     </div>
     <div class="workbench ${demo ? 'is-demo' : ''}">
       <div class="viewport-column">
@@ -166,7 +166,7 @@ function toolSection(demo: boolean): string {
 function howItWorks(): string {
   return `<section class="how-section section-grid" aria-labelledby="how-heading">
     <div class="section-number" aria-hidden="true">02—04</div>
-    <div><p class="eyebrow">Three keys</p><h2 id="how-heading">From files to a useful reference</h2>
+    <div><p class="eyebrow">How it works</p><h2 id="how-heading">Compare frames in three steps</h2>
       <ol class="frame-steps">
         <li><span>01</span><div><h3>Import the sequence</h3><p>Select numbered PNG files or one animated GIF.</p></div></li>
         <li><span>02</span><div><h3>Tune each neighbour</h3><p>Set visibility, opacity, and tint for all three layers.</p></div></li>
@@ -179,7 +179,7 @@ function howItWorks(): string {
 function operatorNote(): string {
   return `<section class="note-section section-grid" aria-labelledby="note-heading">
     <div class="section-number" aria-hidden="true">LOCAL</div>
-    <div class="operator-note"><p class="eyebrow">Operator note</p><h2 id="note-heading">This is a reviewer, not an editor</h2><p>It does not paint, interpolate, host, or sync artwork. It keeps the review surface small.</p><p>Your browser decodes the images. The app stores your latest real sequence in this browser. Demo frames use memory only.</p><a href="/privacy" data-nav>Read the privacy details</a></div>
+    <div class="operator-note"><p class="eyebrow">Limits and privacy</p><h2 id="note-heading">This is a reviewer, not an editor</h2><p>It does not paint, interpolate, host, or sync artwork.</p><p>Your browser decodes the images. The app stores your latest real sequence in this browser. Demo frames use memory only.</p><a href="/privacy" data-nav>Read the privacy details</a></div>
   </section>`;
 }
 
@@ -584,7 +584,8 @@ function bindNavigation(): void {
     link.addEventListener('click', (event) => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
-      history.pushState({}, '', link.pathname);
+      const target = new URL(link.href);
+      history.pushState({}, '', `${target.pathname}${target.search}${target.hash}`);
       void render(true);
     });
   });
@@ -600,11 +601,21 @@ function updateNetworkState(): void {
 export async function render(moveFocus = false): Promise<void> {
   cleanupTool?.();
   cleanupTool = undefined;
-  const route = routeFromPath(location.pathname.replace(/\/$/, '') || '/');
+  const requestedRoute = routeFromPath(location.pathname.replace(/\/$/, '') || '/');
+  const route: Route = requestedRoute === '/' && new URLSearchParams(location.search).get('demo') === '1'
+    ? '/demo'
+    : requestedRoute;
   const root = document.querySelector<HTMLDivElement>('#app')!;
   document.title = titles[route];
   document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', descriptions[route]);
-  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://onion-next-frame.sociobot.in${route === '/404' ? location.pathname : route}`);
+  const canonicalPath = route === '/404' ? location.pathname : route;
+  const canonicalUrl = `https://onion-next-frame.sociobot.in${canonicalPath}`;
+  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
+  document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', titles[route]);
+  document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', descriptions[route]);
+  document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
+  document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute('content', titles[route]);
+  document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute('content', descriptions[route]);
   if (route === '/') root.innerHTML = homePage();
   else if (route === '/demo') root.innerHTML = demoPage();
   else if (route === '/privacy') root.innerHTML = privacyPage();

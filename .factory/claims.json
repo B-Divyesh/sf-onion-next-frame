@@ -4,12 +4,19 @@
     "claim": "The sample demo saves nothing and does not read the real project",
     "where": "demo banner, privacy page, README",
     "test": "npm test -- --grep @claim:demo-sandbox",
-    "sandbox": "fresh browser context at /demo; assert six frames, no app IndexedDB, and reset restores defaults"
+    "sandbox": "fresh browser context at /?demo=1; assert the banner, no app IndexedDB, and reset restores defaults"
+  },
+  {
+    "id": "sample-six-frame-demo",
+    "claim": "The sample demo loads a six-frame run cycle",
+    "where": "landing hero, README",
+    "test": "npm test -- --grep @claim:sample-six-frame-demo",
+    "sandbox": "fresh browser context at /?demo=1; assert the frame counter, six frame controls, and loaded status"
   },
   {
     "id": "sequence-import",
-    "claim": "Imports numbered PNG files and animated GIF frames",
-    "where": "tool empty state, how it works, README",
+    "claim": "Imports numbered PNG files in natural filename order and animated GIF frames",
+    "where": "landing light-table introduction, tool empty state, how it works, README",
     "test": "npm test -- --grep @claim:sequence-import",
     "sandbox": "fresh browser context; import out-of-order PNG fixtures and a two-frame GIF fixture"
   },

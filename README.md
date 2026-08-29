@@ -20,7 +20,7 @@ Images stay on the device. There is no account, upload, analytics, advertising, 
 
 ## Try the isolated demo
 
-Open `/demo` or <https://onion-next-frame.sociobot.in/demo>. Six original sample frames load immediately. The cyan banner remains visible while demo mode is active. **Reset demo** restores the sample. **Start for real** discards it and returns to an empty or previously saved project.
+Open `/?demo=1` or <https://onion-next-frame.sociobot.in/?demo=1>. Six original sample frames load immediately. The cyan banner remains visible while demo mode is active. **Reset demo** restores the sample. **Start for real** discards it and returns to an empty or previously saved project. `/demo` remains available as a short link.
 
 Demo details and its storage boundary are in [`.factory/demo.md`](.factory/demo.md). Every product claim and its browser test are in [`.factory/claims.json`](.factory/claims.json).
 
@@ -33,7 +33,7 @@ npm install
 npm run dev
 ```
 
-Vite prints the local URL. Open `/demo` for the seeded path.
+Vite prints the local URL. Open `/?demo=1` for the seeded path.
 
 ## Test and build
 
@@ -44,7 +44,7 @@ npm test
 npm run build
 ```
 
-`npm test` builds and serves the production app before running 17 browser tests. The exact deploy command is `npm run build`. Static output lands in `dist/`, with `dist/index.html` at its root.
+`npm test` builds and serves the production app before running the browser test suite. The exact deploy command is `npm run build`. Static output lands in `dist/`, with `dist/index.html` at its root.
 
 ## Deploy
 
@@ -52,7 +52,7 @@ Upload `dist/` to the static host. `staticwebapp.config.json` provides the histo
 
 ## Browser notes
 
-Current evergreen browsers can import PNG files. Animated GIF disposal modes are decoded in-browser with `gifuct-js`. Very large sequences can reach the browser's IndexedDB quota; original source files remain the backup.
+If PNG import fails, update your browser or use a current desktop browser. Animated GIF disposal modes are decoded in-browser with `gifuct-js`. Very large sequences can reach the browser's IndexedDB quota; original source files remain the backup.
 
 ## Product records
 

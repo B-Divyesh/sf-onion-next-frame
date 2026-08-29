@@ -1,12 +1,18 @@
 # Plain-language copy audit
 
-Audit date: 2026-08-28. Scope: every sentence, fragment, button, error, and status string used on the landing page and light table. Counts treat hyphenated terms and keyboard symbols as one word. There are no words from the banned list.
+Audit date: 2026-08-29. Scope: every visible landing-page string plus the light table's dynamic status and error messages. Counts treat symbols and hyphenated terms as one word. No line exceeds 22 words. No banned marketing word appears.
 
-## First screen
+## Landing page
 
 | Copy | Words | Result |
 | --- | ---: | --- |
-| A light table for frame sequences | 6 | Pass |
+| Skip to main content | 4 | Pass |
+| Onion Next Frame | 3 | Pass |
+| Home | 1 | Pass |
+| Demo | 1 | Pass |
+| Privacy | 1 | Pass |
+| Ready offline | 2 | Pass |
+| Compare animation frames | 3 | Pass |
 | Compare the frames before and after | 6 | Pass |
 | For pixel artists checking motion between drawings without changing their main editor. | 11 | Pass |
 | Try it with sample data | 5 | Pass |
@@ -15,13 +21,8 @@ Audit date: 2026-08-28. Scope: every sentence, fragment, button, error, and stat
 | Free to use | 3 | Pass |
 | Works offline after the first visit | 6 | Pass |
 | Images stay on this device | 5 | Pass |
-
-The headline states the job in six words. The support line names pixel artists and their editor context. The sample action and its result sit together. The first screen reads aloud in one breath.
-
-## Tool and states
-
-| Copy | Words | Result |
-| --- | ---: | --- |
+| Previous / Current / Next | 3 | Pass |
+| Frame comparison preview | 3 | Pass |
 | Check the in-between drawing | 5 | Pass |
 | Import numbered PNG files or one animated GIF. | 8 | Pass |
 | File names set the frame order. | 6 | Pass |
@@ -31,12 +32,45 @@ The headline states the job in six words. The support line names pixel artists a
 | No sequence loaded | 3 | Pass |
 | Import frames or load the sample to start. | 8 | Pass |
 | Show layer | 2 | Pass |
+| Opacity 28% | 2 | Pass |
+| Tint | 1 | Pass |
+| Use tint | 2 | Pass |
+| Import frames | 2 | Pass |
 | Export contact sheet | 3 | Pass |
 | Import project | 2 | Pass |
 | Export project | 2 | Pass |
 | Clear sequence | 2 | Pass |
-| Keyboard: Left and Right changes frames. | 6 | Pass |
+| Keyboard: ← → changes frames. | 5 | Pass |
 | Shift jumps to an end. | 5 | Pass |
+| How it works | 3 | Pass |
+| Compare frames in three steps | 5 | Pass |
+| Import the sequence | 3 | Pass |
+| Select numbered PNG files or one animated GIF. | 8 | Pass |
+| Tune each neighbour | 3 | Pass |
+| Set visibility, opacity, and tint for all three layers. | 9 | Pass |
+| Export the sheet | 3 | Pass |
+| Download one PNG with every source frame in order. | 9 | Pass |
+| Limits and privacy | 3 | Pass |
+| This is a reviewer, not an editor | 7 | Pass |
+| It does not paint, interpolate, host, or sync artwork. | 9 | Pass |
+| Your browser decodes the images. | 5 | Pass |
+| The app stores your latest real sequence in this browser. | 10 | Pass |
+| Demo frames use memory only. | 5 | Pass |
+| Read the privacy details | 4 | Pass |
+| A local light table for animation frames. | 7 | Pass |
+| Terms | 1 | Pass |
+| Built by Param Factory | 4 | Pass |
+| v1.0.0 · Generated artwork disclosed in the design notes. | 8 | Pass |
+
+The first screen states the job, names pixel artists, and puts the sample result beside the primary action. It reads aloud in one breath.
+
+## Dynamic messages
+
+| Copy | Words | Result |
+| --- | ---: | --- |
+| Offline mode | 2 | Pass |
+| An updated frame is ready. | 5 | Pass |
+| Load update | 2 | Pass |
 | Reading frames in this browser… | 5 | Pass |
 | No files were selected. | 4 | Pass |
 | Choose numbered PNG or GIF files. | 6 | Pass |
@@ -62,23 +96,7 @@ The headline states the job in six words. The support line names pixel artists a
 | Saved frames could not be opened. | 6 | Pass |
 | You can import the sequence again. | 6 | Pass |
 
-Dynamic messages use the same nouns: frame, sequence, layer, and contact sheet. File-specific errors include the failed file name and the next accepted formats.
-
-## Explanation sections
-
-| Copy | Words | Result |
-| --- | ---: | --- |
-| From files to a useful reference | 6 | Pass |
-| Select numbered PNG files or one animated GIF. | 8 | Pass |
-| Set visibility, opacity, and tint for all three layers. | 9 | Pass |
-| Download one PNG with every source frame in order. | 9 | Pass |
-| This is a reviewer, not an editor | 7 | Pass |
-| It does not paint, interpolate, host, or sync artwork. | 9 | Pass |
-| It keeps the review surface small. | 6 | Pass |
-| Your browser decodes the images. | 5 | Pass |
-| The app stores your latest real sequence in this browser. | 10 | Pass |
-| Demo frames use memory only. | 5 | Pass |
-| Read the privacy details | 4 | Pass |
+File-specific errors add the failed file name before the audited instruction. Counts remain below the limit for supported names in the shipped fixtures.
 
 ## Terminology
 
@@ -93,6 +111,13 @@ Dynamic messages use the same nouns: frame, sequence, layer, and contact sheet. 
 | Seeded isolated experience | demo |
 | Browser persistence | saved |
 
+## README corrections
+
+- “Imports naturally sorted PNG sequences and animated GIF frames.” is covered by `sequence-import`.
+- “Six original sample frames load immediately.” is covered by `sample-six-frame-demo`.
+- The compatibility note is actionable guidance, not a browser-support promise.
+- The test command describes the suite without a stale test count.
+
 ## Catalog description
 
-“Compare a pixel animation with its previous and next frames” — 9 words, 59 characters, starts with a verb, and has no banned words.
+“Compare a pixel animation with its previous and next frames.” has 9 words and 60 characters. It starts with a verb.

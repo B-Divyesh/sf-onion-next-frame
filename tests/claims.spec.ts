@@ -4,9 +4,9 @@ import path from 'node:path';
 const fixtures = path.join(process.cwd(), 'tests', 'fixtures');
 
 test('@claim:demo-sandbox sample demo is ready and does not save', async ({ page }) => {
-  await page.goto('/demo');
+  await page.goto('/?demo=1');
   await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
-  await expect(page.locator('#current-counter')).toHaveText('FRAME 03 / 06');
+  await expect(page.locator('#current-counter')).toContainText('FRAME');
   const databases = await page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name));
   expect(databases).not.toContain('onion-next-frame');
   await page.locator('[data-layer="previous"] [data-field="opacity"]').evaluate((input: HTMLInputElement) => {
@@ -15,6 +15,13 @@ test('@claim:demo-sandbox sample demo is ready and does not save', async ({ page
   });
   await page.getByRole('button', { name: 'Reset demo' }).click();
   await expect(page.locator('[data-layer="previous"] [data-output="opacity"]')).toHaveText('28%');
+});
+
+test('@claim:sample-six-frame-demo loads the promised six-frame run cycle', async ({ page }) => {
+  await page.goto('/?demo=1');
+  await expect(page.locator('#current-counter')).toHaveText('FRAME 03 / 06');
+  await expect(page.locator('#frame-strip button')).toHaveCount(6);
+  await expect(page.locator('#viewer-status')).toHaveText('Loaded 6 sample frames. Nothing is saved.');
 });
 
 test('@claim:sequence-import imports numbered PNG files and an animated GIF', async ({ page }) => {
@@ -26,6 +33,8 @@ test('@claim:sequence-import imports numbered PNG files and an animated GIF', as
   ]);
   await expect(page.locator('#viewer-status')).toHaveText('Loaded 2 frames.');
   await expect(page.locator('#project-name')).toContainText('frame-2.png');
+  await expect(page.locator('#frame-strip button').nth(0)).toHaveAttribute('aria-label', 'Show frame 1: frame-2.png');
+  await expect(page.locator('#frame-strip button').nth(1)).toHaveAttribute('aria-label', 'Show frame 2: frame-10.png');
   await input.setInputFiles(path.join(fixtures, 'two-frame.gif'));
   await expect(page.locator('#viewer-status')).toHaveText('Loaded 2 frames.');
   await expect(page.locator('#project-name')).toContainText('two-frame-01.png');
