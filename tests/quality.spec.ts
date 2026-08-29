@@ -42,6 +42,22 @@ test('the workbench fits a 390px phone without horizontal scrolling', async ({ p
   await expect(page.getByRole('button', { name: /Export contact sheet/ })).toBeVisible();
 });
 
+test('every visible landing-page link and button has a 44px touch target at 390px', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const undersized = await page.locator('a, button:not(:disabled)').evaluateAll((elements) => elements.flatMap((element) => {
+    const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    const isVisible = style.visibility !== 'hidden' && style.display !== 'none' && rect.width > 0 && rect.height > 0;
+    return isVisible && (rect.width < 44 || rect.height < 44)
+      ? [{ name: element.textContent?.trim() || element.getAttribute('aria-label'), width: rect.width, height: rect.height }]
+      : [];
+  }));
+
+  expect(undersized).toEqual([]);
+});
+
 test('metadata, manifest, and original social image are reachable', async ({ page, request }) => {
   await page.goto('/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');

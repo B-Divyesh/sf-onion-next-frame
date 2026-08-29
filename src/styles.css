@@ -103,8 +103,11 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 
 .wordmark {
   width: max-content;
+  min-width: 44px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   color: var(--ink);
   font: 400 13px/1.25 var(--display);
@@ -120,7 +123,7 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 
 .site-header nav,
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
-.site-header nav a { min-height: 44px; display: inline-flex; align-items: center; color: var(--muted); }
+.site-header nav a { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; color: var(--muted); }
 .site-header nav a:hover { color: var(--cyan); }
 
 .offline-indicator {
@@ -148,7 +151,8 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 }
 .demo-banner > div { display: flex; align-items: center; gap: 20px; }
 .demo-banner a,
-.demo-banner button { color: var(--void); font-weight: 700; }
+.demo-banner button { min-height: 44px; color: var(--void); font-weight: 700; }
+.demo-banner a { display: inline-flex; align-items: center; }
 
 .section-grid {
   width: min(1440px, 100%);
@@ -359,6 +363,7 @@ kbd { padding: 3px 6px; border: 1px solid var(--line); background: var(--void); 
 .note-section { padding-top: 24px; padding-bottom: 112px; }
 .operator-note { position: relative; max-width: 820px; padding: 48px; border-left: 8px solid var(--magenta); background: var(--panel); box-shadow: 12px 12px 0 rgba(0,0,0,.45); }
 .operator-note p:not(.eyebrow) { max-width: 62ch; color: var(--muted); }
+.operator-note a { min-height: 44px; display: inline-flex; align-items: center; }
 
 .legal-page, .missing-page {
   width: min(900px, calc(100% - 40px));
@@ -386,6 +391,7 @@ kbd { padding: 3px 6px; border: 1px solid var(--line); background: var(--void); 
   font-size: 14px;
 }
 .footer-mark { color: var(--cyan); margin-right: 8px; }
+.site-footer nav a { min-height: 44px; display: inline-flex; align-items: center; }
 
 .toast {
   position: fixed;
