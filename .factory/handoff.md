@@ -57,6 +57,18 @@ Fresh 390 px production-build measurement after the change:
 - A direct Playwright Chromium 390×844 smoke measurement confirmed every
   visible landing link and enabled button is at least 44 px in both dimensions
   and `document.documentElement.scrollWidth === 390`.
+- Deployed with `/opt/fleet/lib/deploy-static.sh onion-next-frame dist`.
+  Azure deployment `3c0678b4-1289-4ea1-aafc-a03bebfa67e6` succeeded and the
+  configured custom domain returned HTTPS 200.
+- Live release identity: `https://onion-next-frame.sociobot.in` serves
+  `assets/index-D-bZH_mo.js` and `assets/index-hAdcsCPz.css`; both return
+  `Cache-Control: public, max-age=31536000, immutable`.
+- `PLAYWRIGHT_BASE_URL=https://onion-next-frame.sociobot.in npm test` —
+  **21/21 passed**, including every claim and the new 390 px touch-target test.
+- `/opt/fleet/lib/verify-url.sh https://onion-next-frame.sociobot.in
+  .factory/evidence/repair-3-live` — HTTP 200, no browser errors, and semantic
+  and basic accessibility checks passed. Fresh live Lighthouse mobile scored
+  Performance **100** / Accessibility **100** (FCP/LCP **1.2 s**, CLS **0**).
 
 This remains a static, local-first PWA. No tracking, external runtime scripts,
 accounts, uploads, or deployment configuration were added. The previous
@@ -71,12 +83,12 @@ npm run build
 ```
 
 Deploy `dist/` using the existing static-host configuration in
-`public/staticwebapp.config.json`. The configured static deployment is triggered
-by pushing `main`; live verification should then be run against
-`https://onion-next-frame.sociobot.in`.
+`public/staticwebapp.config.json`:
+
+```sh
+/opt/fleet/lib/deploy-static.sh onion-next-frame dist
+```
 
 ## Known gaps / next step
 
-No known product gaps. After the static deployment finishes, re-run the full
-Playwright suite and `verify-url.sh` against the live URL to capture the final
-deployment identity and headers.
+No known product gaps. The repair is deployed and live-verified.
